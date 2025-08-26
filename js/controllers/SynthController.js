@@ -94,8 +94,9 @@ export class SynthController {
                         const modulationGain = new this.Tone.Gain(modulationValue * 100);
                         modulatorEnvelope.connect(modulationGain);
                         modulationGain.connect(carrierOsc.frequency);
-                    } else {
-                        const selfModulationOsc = new this.Tone.Oscillator(carrierOsc.frequency.value, carrierOsc.waveform);
+                                         } else {
+                         const selfModulationOsc = new this.Tone.Oscillator(carrierOsc.frequency.value, carrierOsc.waveform);
+                         selfModulationOsc.phase = carrier.getInitialPhase();
                         const selfModulationEnvelope = new this.Tone.AmplitudeEnvelope({
                             attack: carrier.voices.get(note).envelope.attack,
                             decay: carrier.voices.get(note).envelope.decay,
@@ -271,6 +272,20 @@ export class SynthController {
         }
     }
 
+    setPhase(id, phase) {
+        const oscillator = this.getOscillator(id);
+        if (oscillator) {
+            oscillator.phase = Math.max(0, Math.min(1, phase));
+            
+            const oscillatorView = this.oscillatorViews[id];
+            if (oscillatorView) {
+                oscillatorView.updateDisplay();
+            }
+            
+            console.log(`Oscillator ${id} phase changed to: ${phase}`);
+        }
+    }
+
     noteOn(note, velocity) {
         const frequency = this.midiNoteToFrequency(note);
         const normalizedVelocity = velocity / 127;
@@ -292,9 +307,11 @@ export class SynthController {
         try {
             for (const osc of this.oscillators) {
                 osc.removeVoice(note);
-                if (osc.isActive) {
-                    const realFrequency = frequency * osc.ratio;
-                    const toneOsc = new this.Tone.Oscillator(realFrequency, osc.waveform);
+                                 if (osc.isActive) {
+                     const realFrequency = frequency * osc.ratio;
+                     const initialPhase = osc.getInitialPhase();
+                     const toneOsc = new this.Tone.Oscillator(realFrequency, osc.waveform);
+                     toneOsc.phase = initialPhase;
                     const envelope = new this.Tone.AmplitudeEnvelope({
                         attack: osc.attack,
                         decay: osc.decay,

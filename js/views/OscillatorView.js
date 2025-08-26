@@ -102,6 +102,15 @@ export class OscillatorView {
                     <input type="range" class="control-input" data-control="release" 
                            value="${this.getModel().release * 1000}" min="1" max="2000" step="1">
                 </div>
+                
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Phase</label>
+                        <span class="control-value" data-display="phase">${this.getModel().phase === 0 ? 'Fixed' : this.getModel().phase === 1 ? 'Random' : 'Custom'}</span>
+                    </div>
+                    <input type="range" class="control-input" data-control="phase" 
+                           value="${this.getModel().phase * 100}" min="0" max="100" step="1">
+                </div>
             </div>
         `;
         
@@ -176,6 +185,12 @@ export class OscillatorView {
             releaseInput.value = Math.round(this.getModel().release * 1000);
             this.updateReleaseDisplay(this.getModel().release);
         }
+
+        const phaseInput = this.panelElement.querySelector('[data-control="phase"]');
+        if (phaseInput) {
+            phaseInput.value = Math.round(this.getModel().phase * 100);
+            this.updatePhaseDisplay(this.getModel().phase);
+        }
     } 
 
     updateTabStatus() {
@@ -228,6 +243,19 @@ export class OscillatorView {
         const releaseDisplay = this.panelElement.querySelector('[data-display="release"]');
         if (releaseDisplay) {
             releaseDisplay.textContent = value.toFixed(3) + 's';
+        }
+    }
+
+    updatePhaseDisplay(value) {
+        const phaseDisplay = this.panelElement.querySelector('[data-display="phase"]');
+        if (phaseDisplay) {
+            if (value === 0) {
+                phaseDisplay.textContent = 'Fixed';
+            } else if (value === 1) {
+                phaseDisplay.textContent = 'Random';
+            } else {
+                phaseDisplay.textContent = 'Custom';
+            }
         }
     }
 
@@ -289,6 +317,15 @@ export class OscillatorView {
                 const value = parseFloat(e.target.value) / 1000; 
                 this.controller.setRelease(this.modelId, value);
                 this.updateReleaseDisplay(value);
+            });
+        }
+
+        const phaseInput = panelElement.querySelector('[data-control="phase"]');
+        if (phaseInput) {
+            phaseInput.addEventListener('input', (e) => {
+                const value = parseFloat(e.target.value) / 100; 
+                this.controller.setPhase(this.modelId, value);
+                this.updatePhaseDisplay(value);
             });
         }
     }
