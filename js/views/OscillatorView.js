@@ -73,7 +73,7 @@ export class OscillatorView {
                         <span class="control-value" data-display="attack">${this.getModel().attack.toFixed(3)}s</span>
                     </div>
                     <input type="range" class="control-input" data-control="attack" 
-                           value="${this.getModel().attack * 1000}" min="1" max="2000" step="1">
+                           value="${this.getModel().attack * 1000}" min="0" max="2000" step="1">
                 </div>
                 
                 <div class="control-group">

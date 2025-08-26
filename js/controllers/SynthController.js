@@ -3,12 +3,17 @@ import AudioKeys from 'audiokeys';
 import { OscillatorModel } from '../models/OscillatorModel.js';
 import { OscillatorView } from '../views/OscillatorView.js';
 import { ModulationMatrixView } from '../views/ModulationMatrixView.js';
+import { FilterModel } from '../models/FilterModel.js';
+import { FilterView } from '../views/FilterView.js';
 
 export class SynthController {
     constructor() {
         this.oscillators = [];
         this.oscillatorViews = [];
         this.modulationMatrixView = null;
+        this.filterModel = null;
+        this.filterView = null;
+        this.globalFilter = null;
         this.isInitialized = false;
         this.masterVolume = 0.7; 
         this.masterGainNode = null;
@@ -24,6 +29,7 @@ export class SynthController {
             this.initUI();
             this.initKeyboard();
             this.initModulationMatrix();
+            this.initFilter();
 
             this.isInitialized = true;
             console.log('Synth Controller initialized successfully');
@@ -51,6 +57,27 @@ export class SynthController {
     initModulationMatrix() {
         this.modulationMatrixView = new ModulationMatrixView(this);
         console.log('Modulation Matrix initialized');
+    }
+
+    initFilter() {
+        this.filterModel = new FilterModel();
+        this.filterView = new FilterView(this);
+        
+
+        this.globalFilter = new this.Tone.Filter({
+            type: this.filterModel.type,
+            frequency: this.filterModel.frequency,
+            Q: this.filterModel.resonance,
+            rolloff: this.filterModel.rolloff
+        });
+        
+
+        this.masterGainNode.disconnect();
+        this.masterGainNode.connect(this.globalFilter);
+        this.globalFilter.connect(this.masterMeter);
+        this.globalFilter.connect(this.Tone.context.destination);
+        
+        console.log('Filter initialized and connected to audio chain');
     }
 
     getOutputVolume(oscillatorId) {
@@ -137,7 +164,8 @@ export class SynthController {
         }
 
         this.oscillators.forEach((oscillator, index) => {
-            const oscillatorView = new OscillatorView(this, index, tabsContainer, contentContainer, oscillator.isActive);
+            const isInitiallySelected = (index === 0);
+            const oscillatorView = new OscillatorView(this, index, tabsContainer, contentContainer, isInitiallySelected);
             this.oscillatorViews[index] = oscillatorView;
         });
         console.log('UI initialized with tab system');
@@ -305,6 +333,45 @@ export class SynthController {
 
     getMasterVolume() {
         return this.masterVolume;
+    }
+
+
+    setFilterType(type) {
+        if (this.filterModel && this.globalFilter) {
+            if (this.filterModel.setType(type)) {
+                this.globalFilter.type = type;
+                console.log(`Filter type changed to: ${type}`);
+            }
+        }
+    }
+
+    setFilterFrequency(frequency) {
+        if (this.filterModel && this.globalFilter) {
+            const clampedFrequency = this.filterModel.setFrequency(frequency);
+            this.globalFilter.frequency.value = clampedFrequency;
+            console.log(`Filter frequency changed to: ${clampedFrequency} Hz`);
+        }
+    }
+
+    setFilterResonance(resonance) {
+        if (this.filterModel && this.globalFilter) {
+            const clampedResonance = this.filterModel.setResonance(resonance);
+            this.globalFilter.Q.value = clampedResonance;
+            console.log(`Filter resonance changed to: ${clampedResonance}`);
+        }
+    }
+
+    setFilterRolloff(rolloff) {
+        if (this.filterModel && this.globalFilter) {
+            if (this.filterModel.setRolloff(rolloff)) {
+                this.globalFilter.rolloff = rolloff;
+                console.log(`Filter rolloff changed to: ${rolloff} dB/oct`);
+            }
+        }
+    }
+
+    getFilterSettings() {
+        return this.filterModel ? this.filterModel.getSettings() : null;
     }
 
     getMeterLevel() {

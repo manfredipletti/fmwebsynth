@@ -4,11 +4,11 @@ export class OscillatorModel {
         this.ratio = ratio;
         this.waveform = 'sine';
         this.isActive = true;
-        this.attack = 0.1;
+        this.attack = 0.0;
         this.decay = 0.2;
         this.sustain = 0.7;
         this.release = 0.3;
-        this.phase = 0; // 0 = sempre stessa fase, 1 = fase random
+        this.phase = 0; 
         this.onChangeCallbacks = [];
         this.voices = new Map();
         this.selfModulations = new Map();
@@ -17,11 +17,10 @@ export class OscillatorModel {
 
     getInitialPhase() {
         if (this.phase === 0) {
-            return 0; // Sempre stessa fase (0)
+            return 0;
         } else if (this.phase === 1) {
-            return Math.random() * 360; // Fase random (0-360 gradi)
+            return Math.random() * 360;
         } else {
-            // Fase fissa personalizzata (0-360 gradi)
             return this.phase * 360;
         }
     }
@@ -46,11 +45,10 @@ export class OscillatorModel {
         const selfModulation = this.selfModulations.get(note);
         if (selfModulation) {
             selfModulation.envelope.triggerRelease();
-            // Schedule disposal after release time
             const releaseTime = selfModulation.envelope.release;
             setTimeout(() => {
                 this.disposeSelfModulation(selfModulation);
-            }, releaseTime * 1000 + 100); // Add 100ms buffer
+            }, releaseTime * 1000 + 100);
             this.selfModulations.delete(note);
         }
     }

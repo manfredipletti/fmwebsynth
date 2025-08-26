@@ -44,6 +44,26 @@
     min-height: 400px;
 }
 
+.filter-section {
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: 
+        var(--shadow-neon-cyan),
+        var(--shadow-inset);
+}
+
+.envelopes-section {
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: 
+        var(--shadow-neon-cyan),
+        var(--shadow-inset);
+}
+
 .effects-section {
     background: var(--panel-bg);
     border: 2px solid var(--border-color);

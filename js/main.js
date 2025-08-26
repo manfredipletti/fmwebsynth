@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         addTestButton();
         initMasterVolume();
+        initEnvelopeTabs();
 
         
         console.log('FM Web Synth - Ready!');
@@ -291,5 +292,82 @@ async function testSynth() {
     } catch (error) {
         console.error('Error during test:', error);
         showErrorMessage('Failed to play test sound. Check console for details.');
+    }
+}
+
+
+function initEnvelopeTabs() {
+    const tabs = document.querySelectorAll('.envelope-tab');
+    const panels = document.querySelectorAll('.envelope-panel');
+    
+    if (tabs.length === 0 || panels.length === 0) {
+        console.warn('Envelope tabs or panels not found');
+        return;
+    }
+    
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetEnvelope = tab.dataset.envelope;
+            
+
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            
+
+            tab.classList.add('active');
+            
+ 
+            const targetPanel = document.querySelector(`[data-envelope="${targetEnvelope}"].envelope-panel`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+            
+            console.log(`Switched to ${targetEnvelope} envelope`);
+        });
+    });
+    
+
+    initEnvelopeDisplays();
+    
+    console.log('Envelope tabs initialized');
+}
+
+
+function initEnvelopeDisplays() {
+
+    updateEnvelopeDisplay('amp-attack-value', 0.0, 's');
+    updateEnvelopeDisplay('amp-decay-value', 0.3, 's');
+    updateEnvelopeDisplay('amp-sustain-value', 0.8, '');
+    updateEnvelopeDisplay('amp-release-value', 1.0, 's');
+    
+
+    updateEnvelopeDisplay('pitch-amount-value', 0, ' cents');
+    updateEnvelopeDisplay('pitch-attack-value', 0.0, 's');
+    updateEnvelopeDisplay('pitch-decay-value', 0.3, 's');
+    updateEnvelopeDisplay('pitch-sustain-value', 0.0, '');
+    updateEnvelopeDisplay('pitch-release-value', 1.0, 's');
+    
+
+    updateEnvelopeDisplay('filter-amount-value', 0, ' Hz');
+    updateEnvelopeDisplay('filter-attack-value', 0.0, 's');
+    updateEnvelopeDisplay('filter-decay-value', 0.3, 's');
+    updateEnvelopeDisplay('filter-sustain-value', 0.5, '');
+    updateEnvelopeDisplay('filter-release-value', 1.0, 's');
+}
+
+
+function updateEnvelopeDisplay(elementId, value, unit) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        if (unit === 's') {
+            element.textContent = value.toFixed(2) + unit;
+        } else if (unit === ' cents') {
+            element.textContent = value + unit;
+        } else if (unit === ' Hz') {
+            element.textContent = value + unit;
+        } else {
+            element.textContent = value.toFixed(1);
+        }
     }
 }
