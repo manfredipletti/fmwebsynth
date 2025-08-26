@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.synthController = new SynthController();
         
         addTestButton();
+        initMasterVolume();
 
         
         console.log('FM Web Synth - Ready!');
@@ -70,6 +71,184 @@ function addTestButton() {
     });
     
     header.appendChild(testButton);
+}
+
+function initMasterVolume() {
+    const volumeKnob = document.getElementById('master-volume-knob');
+    const volumeDisplay = document.getElementById('volume-display');
+    const volumeBar = document.getElementById('volume-bar');
+    const knobIndicator = document.getElementById('knob-indicator');
+    
+    if (!volumeKnob || !volumeDisplay || !volumeBar || !knobIndicator) {
+        console.warn('Master volume elements not found');
+        return;
+    }
+    
+
+    const initialVolume = window.synthController ? window.synthController.getMasterVolume() : 0.7;
+    volumeKnob.value = Math.round(initialVolume * 100);
+    updateVolumeDisplay(initialVolume);
+    updateKnobIndicator(initialVolume);
+    
+
+    volumeKnob.addEventListener('input', (e) => {
+        const volume = parseFloat(e.target.value) / 100;
+        if (window.synthController) {
+            window.synthController.setMasterVolume(volume);
+        }
+        updateVolumeDisplay(volume);
+        updateKnobIndicator(volume);
+
+    });
+
+
+    let isDragging = false;
+    let startY = 0;
+    let startValue = 0;
+
+    volumeKnob.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startY = e.clientY;
+        startValue = parseFloat(volumeKnob.value);
+        document.body.style.cursor = 'ns-resize';
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const deltaY = startY - e.clientY; 
+        const sensitivity = 0.5; 
+        const newValue = Math.max(0, Math.min(100, startValue + (deltaY * sensitivity)));
+        
+        volumeKnob.value = newValue;
+        
+
+        const inputEvent = new Event('input');
+        volumeKnob.dispatchEvent(inputEvent);
+        
+        e.preventDefault();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            document.body.style.cursor = '';
+        }
+    });
+
+
+    volumeKnob.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startY = e.touches[0].clientY;
+        startValue = parseFloat(volumeKnob.value);
+        e.preventDefault();
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        
+        const deltaY = startY - e.touches[0].clientY;
+        const sensitivity = 0.5;
+        const newValue = Math.max(0, Math.min(100, startValue + (deltaY * sensitivity)));
+        
+        volumeKnob.value = newValue;
+        
+        const inputEvent = new Event('input');
+        volumeKnob.dispatchEvent(inputEvent);
+        
+        e.preventDefault();
+    });
+
+    document.addEventListener('touchend', () => {
+        if (isDragging) {
+            isDragging = false;
+        }
+    });
+    
+
+    setInterval(() => {
+        if (window.synthController && window.synthController.isInitialized) {
+
+            const meterLevel = window.synthController.getMeterLevel();
+            updateVolumeMeter(meterLevel);
+        }
+    }, 50); 
+}
+
+function updateVolumeDisplay(volume) {
+    const volumeDisplay = document.getElementById('volume-display');
+    if (volumeDisplay) {
+        volumeDisplay.textContent = Math.round(volume * 100) + '%';
+    }
+}
+
+function updateVolumeMeter(level) {
+    const volumeBar = document.getElementById('volume-bar');
+    if (volumeBar) {
+
+        if (level < 0.001) {
+
+            const currentHeight = parseFloat(volumeBar.style.height) || 0;
+            const targetHeight = currentHeight * 0.85; // Faster decay to zero
+            volumeBar.style.height = targetHeight + '%';
+            volumeBar.classList.remove('active');
+            return;
+        }
+        
+
+        const percentage = Math.min(100, Math.max(0, level * 100));
+        
+
+        const currentHeight = parseFloat(volumeBar.style.height) || 0;
+        const targetHeight = Math.max(percentage, currentHeight * 0.92);
+        
+        volumeBar.style.height = targetHeight + '%';
+        
+
+        updateMeterColor(volumeBar, targetHeight);
+        
+
+        if (targetHeight > 85) {
+            volumeBar.classList.add('active');
+        } else {
+            volumeBar.classList.remove('active');
+        }
+    }
+}
+
+function updateMeterColor(volumeBar, percentage) {
+    let color;
+    
+    if (percentage > 90) {
+
+        color = '#ff0040';
+    } else if (percentage > 75) {
+
+        color = '#ffaa00';
+    } else if (percentage > 50) {
+
+        color = '#ffff00';
+    } else if (percentage > 25) {
+
+        color = '#88ff00';
+    } else {
+
+        color = '#00ff00';
+    }
+    
+
+    volumeBar.style.background = color;
+}
+
+function updateKnobIndicator(volume) {
+    const knobIndicator = document.getElementById('knob-indicator');
+    if (knobIndicator) {
+
+        const angle = (volume * 270) - 135;
+        knobIndicator.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+        knobIndicator.style.transformOrigin = 'center 22px'; 
+    }
 }
 
 window.addEventListener('error', (event) => {

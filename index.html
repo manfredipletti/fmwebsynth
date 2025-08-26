@@ -174,6 +174,24 @@
             <div class="midi-status" id="midi-status">MIDI: Disconnected</div>
             <div class="synth-info">FM Web Synth v1.0</div>
         </footer>
+        
+
+        <div class="fixed-master-controls">
+            <div class="master-volume">
+                <div class="volume-control">
+                    <div class="knob-container">
+                        <input type="range" class="volume-knob" id="master-volume-knob" 
+                               min="0" max="100" value="70" step="1">
+                        <div class="knob-indicator" id="knob-indicator"></div>
+                    </div>
+                    <div class="volume-meter" id="volume-meter">
+                        <div class="volume-bar" id="volume-bar"></div>
+                    </div>
+                </div>
+                <label class="master-label">MASTER</label>
+                <div class="volume-display" id="volume-display">70%</div>
+            </div>
+        </div>
     </div>
     
     <script type="module" src="js/main.js"></script>

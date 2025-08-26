@@ -10,6 +10,9 @@ export class SynthController {
         this.oscillatorViews = [];
         this.modulationMatrixView = null;
         this.isInitialized = false;
+        this.masterVolume = 0.7; 
+        this.masterGainNode = null;
+        this.masterMeter = null;
         this.init();
     }
 
@@ -145,6 +148,12 @@ export class SynthController {
         try {
 
             this.Tone = Tone;
+            this.masterGainNode = new this.Tone.Gain(this.masterVolume * 0.1);
+            this.masterMeter = new this.Tone.Meter();
+            
+
+            this.masterGainNode.connect(this.masterMeter);
+            this.masterGainNode.connect(this.Tone.context.destination);
             
             console.log('Tone.js loaded, waiting for user interaction to start audio');
             console.log('Audio context state:', Tone.context.state);
@@ -286,6 +295,29 @@ export class SynthController {
         }
     }
 
+    setMasterVolume(volume) {
+        this.masterVolume = Math.max(0, Math.min(1, volume));
+        if (this.masterGainNode) {
+            this.masterGainNode.gain.value = this.masterVolume * 0.1; 
+        }
+        console.log(`Master volume changed to: ${Math.round(this.masterVolume * 100)}%`);
+    }
+
+    getMasterVolume() {
+        return this.masterVolume;
+    }
+
+    getMeterLevel() {
+        if (this.masterMeter) {
+
+            const dbValue = this.masterMeter.getValue();
+
+            const linearValue = Math.max(0, Math.min(1, (dbValue + 60) / 60));
+            return linearValue;
+        }
+        return 0;
+    }
+
     noteOn(note, velocity) {
         const frequency = this.midiNoteToFrequency(note);
         const normalizedVelocity = velocity / 127;
@@ -318,10 +350,10 @@ export class SynthController {
                         sustain: osc.sustain,
                         release: osc.release
                     });
-                    const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
-                    toneOsc.connect(envelope);
-                    envelope.connect(gainNode);
-                    gainNode.connect(this.Tone.context.destination);
+                                         const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
+                     toneOsc.connect(envelope);
+                     envelope.connect(gainNode);
+                     gainNode.connect(this.masterGainNode);
 
                     osc.addVoice(note, toneOsc, envelope, gainNode);
                 }
