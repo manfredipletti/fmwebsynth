@@ -83,6 +83,13 @@ window.addEventListener('unhandledrejection', (event) => {
     showErrorMessage('An unhandled error occurred. Check console for details.');
 });
 
+// Cleanup when page is unloaded
+window.addEventListener('beforeunload', () => {
+    if (window.synthController) {
+        window.synthController.dispose();
+    }
+});
+
 
 async function testSynth() {
     if (!window.synthController || !window.synthController.isInitialized) {

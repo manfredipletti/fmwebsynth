@@ -2,11 +2,13 @@ import * as Tone from 'tone';
 import AudioKeys from 'audiokeys';
 import { OscillatorModel } from '../models/OscillatorModel.js';
 import { OscillatorView } from '../views/OscillatorView.js';
+import { ModulationMatrixView } from '../views/ModulationMatrixView.js';
 
 export class SynthController {
     constructor() {
         this.oscillators = [];
         this.oscillatorViews = [];
+        this.modulationMatrixView = null;
         this.isInitialized = false;
         this.init();
     }
@@ -18,6 +20,7 @@ export class SynthController {
             this.createOscillators();
             this.initUI();
             this.initKeyboard();
+            this.initModulationMatrix();
 
             this.isInitialized = true;
             console.log('Synth Controller initialized successfully');
@@ -41,6 +44,76 @@ export class SynthController {
             this.noteOff(note.note, note.velocity);
         });
     }
+
+    initModulationMatrix() {
+        this.modulationMatrixView = new ModulationMatrixView(this);
+        console.log('Modulation Matrix initialized');
+    }
+
+    getOutputVolume(oscillatorId) {
+        if (this.modulationMatrixView) {
+            const outputValues = this.modulationMatrixView.getOutputValues();
+            return (outputValues[oscillatorId] || 0) / 100; 
+        }
+        return 1.0; 
+    }
+
+    updateOutputVolume(oscillatorId, newVolume) {
+        const oscillator = this.getOscillator(oscillatorId);
+        if (oscillator) {
+            for (const [note, voice] of oscillator.voices) {
+                if (voice.gainNode) {
+                    const currentGain = voice.gainNode.gain.value;
+                    const baseGain = currentGain / (this.getOutputVolume(oscillatorId) || 0.01); 
+                    voice.gainNode.gain.value = baseGain * newVolume;
+                }
+            }
+            console.log(`Updated output volume for oscillator ${oscillatorId}: ${Math.round(newVolume * 100)}%`);
+        }
+    }
+
+    createFMConnections(note) {
+        if (!this.modulationMatrixView) return;
+
+        const modulationValues = this.modulationMatrixView.getModulationValues();
+        
+        
+        for (let modulatorId = 0; modulatorId < 8; modulatorId++) {
+            const modulator = this.getOscillator(modulatorId);
+            if (!modulator || !modulator.isActive) continue;
+            
+            for (let carrierId = 0; carrierId < 8; carrierId++) {
+                const modulationValue = modulationValues[modulatorId] && modulationValues[modulatorId][carrierId] || 0;
+                if (modulationValue > 0) {
+                    const carrier = this.getOscillator(carrierId);
+                    if (!carrier || !carrier.isActive) continue;
+                    const carrierOsc = carrier.voices.get(note).toneOsc;
+                    if (carrierId != modulatorId) {
+                        
+                        const modulatorEnvelope = this.getOscillator(modulatorId).voices.get(note).envelope;
+                        const modulationGain = new this.Tone.Gain(modulationValue * 100);
+                        modulatorEnvelope.connect(modulationGain);
+                        modulationGain.connect(carrierOsc.frequency);
+                    } else {
+                        const selfModulationOsc = new this.Tone.Oscillator(carrierOsc.frequency.value, carrierOsc.waveform);
+                        const selfModulationEnvelope = new this.Tone.AmplitudeEnvelope({
+                            attack: carrier.voices.get(note).envelope.attack,
+                            decay: carrier.voices.get(note).envelope.decay,
+                            sustain: carrier.voices.get(note).envelope.sustain,
+                            release: carrier.voices.get(note).envelope.release
+                        });
+                        const selfModulationGain = new this.Tone.Gain(modulationValue * 100);
+                        selfModulationOsc.connect(selfModulationEnvelope);
+                        selfModulationEnvelope.connect(selfModulationGain);
+                        selfModulationGain.connect(carrierOsc.frequency);
+                        carrier.addSelfModulation(note, selfModulationOsc, selfModulationEnvelope, selfModulationGain);
+                    }    
+                    console.log(`FM Connection: OSC ${modulatorId} -> OSC ${carrierId} (${modulationValue}%)`);
+                }
+            }
+        }
+    }
+
 
     createOscillators() {
         for (let i=0; i<8; i++) {
@@ -101,7 +174,8 @@ export class SynthController {
             oscillator.isActive = !oscillator.isActive;
             
             if (!oscillator.isActive) {
-                oscillator.stopAllVoices();
+                // Force immediate disposal when turning off oscillator
+                oscillator.forceDisposeAllVoices();
             }
             
             const oscillatorView = this.oscillatorViews[id];
@@ -200,56 +274,70 @@ export class SynthController {
     noteOn(note, velocity) {
         const frequency = this.midiNoteToFrequency(note);
         const normalizedVelocity = velocity / 127;
+        this.playOscillators(note, frequency, normalizedVelocity);
         
-        for (const osc of this.oscillators) {
-            if (osc.isActive)
-            this.playOscillator(osc, note, frequency, normalizedVelocity);
-        }
         
         console.log(`Note On: ${note} (${frequency.toFixed(2)} Hz), Velocity: ${normalizedVelocity}, Active OSC: ${this.activeOscillatorId}`);
     }
 
     noteOff(note) {
         for (const oscillator of this.oscillators) {
-            if (oscillator.isActive) {
-                oscillator.removeVoice(note);
-            }
+            oscillator.removeVoice(note);
         }
         console.log(`Note Off: ${note}`);
     }
 
-    playOscillator(oscillator, note, frequency, velocity) {
+    playOscillators(note, frequency, velocity) {
 
         try {
-            oscillator.removeVoice(note);
-            const realFrequency = frequency * oscillator.ratio;
-            const toneOsc = new this.Tone.Oscillator(realFrequency, oscillator.waveform);
-            const envelope = new this.Tone.AmplitudeEnvelope({
-                attack: oscillator.attack,
-                decay: oscillator.decay,
-                sustain: oscillator.sustain,
-                release: oscillator.release
-            });
+            for (const osc of this.oscillators) {
+                osc.removeVoice(note);
+                if (osc.isActive) {
+                    const realFrequency = frequency * osc.ratio;
+                    const toneOsc = new this.Tone.Oscillator(realFrequency, osc.waveform);
+                    const envelope = new this.Tone.AmplitudeEnvelope({
+                        attack: osc.attack,
+                        decay: osc.decay,
+                        sustain: osc.sustain,
+                        release: osc.release
+                    });
+                    const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
+                    toneOsc.connect(envelope);
+                    envelope.connect(gainNode);
+                    gainNode.connect(this.Tone.context.destination);
+
+                    osc.addVoice(note, toneOsc, envelope, gainNode);
+                }
+            }
             
-            const gainNode = new this.Tone.Gain(0.5 * velocity);
-            toneOsc.connect(envelope);
-            envelope.connect(gainNode);
-            gainNode.connect(this.Tone.context.destination);
-        
-        
-            toneOsc.start();
-            envelope.triggerAttack();
+            // STEP 2: Creare le connessioni FM dalla modulation matrix
+            this.createFMConnections(note);
             
-            oscillator.addVoice(note, toneOsc, envelope, gainNode);
-            
-            console.log(`Oscillator ${oscillator.id} started: ${frequency}Hz, ${oscillator.waveform}`);
+            // STEP 2: Suonare gli oscillatori attivi
+            for (const osc of this.oscillators) {
+                if (osc.isActive) {
+                    osc.voices.get(note).toneOsc.start();
+                    osc.voices.get(note).envelope.triggerAttack();
+                    if (osc.selfModulations.has(note)) {
+                        osc.selfModulations.get(note).selfModulationOsc.start();
+                        osc.selfModulations.get(note).selfModulationEnvelope.triggerAttack();
+                    }
+                }
+            }
             
         } catch (error) {
-            console.error(`Failed to play oscillator ${oscillator.id}:`, error);
+            console.error(`Failed to play oscillators:`, error);
         }
     }
 
     midiNoteToFrequency(note) {
         return 440 * Math.pow(2, (note - 69) / 12);
+    }
+
+    dispose() {
+        console.log('Disposing all oscillators...');
+        this.oscillators.forEach(oscillator => {
+            oscillator.forceDisposeAllVoices();
+        });
     }
 }

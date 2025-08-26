@@ -26,6 +26,140 @@
             <div class="modulation-section">
                 <h2 class="section-title">MODULATION MATRIX</h2>
                 <div class="modulation-matrix" id="modulation-matrix">
+                    <div class="matrix-connections" id="matrix-connections"></div>
+                    <div class="matrix-container">
+                        <div class="matrix-header">
+                            <div class="matrix-corner"></div>
+                            <div class="matrix-carrier-labels">
+                                <div class="carrier-label">OSC 1</div>
+                                <div class="carrier-label">OSC 2</div>
+                                <div class="carrier-label">OSC 3</div>
+                                <div class="carrier-label">OSC 4</div>
+                                <div class="carrier-label">OSC 5</div>
+                                <div class="carrier-label">OSC 6</div>
+                                <div class="carrier-label">OSC 7</div>
+                                <div class="carrier-label">OSC 8</div>
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-body">
+                            <div class="matrix-modulator-labels">
+                                <div class="modulator-label">OSC 1</div>
+                                <div class="modulator-label">OSC 2</div>
+                                <div class="modulator-label">OSC 3</div>
+                                <div class="modulator-label">OSC 4</div>
+                                <div class="modulator-label">OSC 5</div>
+                                <div class="modulator-label">OSC 6</div>
+                                <div class="modulator-label">OSC 7</div>
+                                <div class="modulator-label">OSC 8</div>
+                            </div>
+                            
+                            <div class="matrix-grid">
+                                <!-- Row 1 -->
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="0" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                                <!-- Row 2 -->
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="1" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                                <!-- Row 3 -->
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="2" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                                <!-- Row 4 -->
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="3" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                                <!-- Row 5 -->
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="4" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="5" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="6" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                                <!-- Row 8 -->
+                                <div class="matrix-row">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="0" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="1" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="2" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="3" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="4" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="5" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="6" min="0" max="100" value="0">
+                                    <input type="number" class="matrix-cell" data-modulator="7" data-carrier="7" min="0" max="100" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <div class="matrix-output">
+                            <div class="output-label">OUTPUT</div>
+                            <div class="output-controls">
+                                <input type="number" class="output-cell" data-oscillator="0" min="0" max="100" value="100">
+                                <input type="number" class="output-cell" data-oscillator="1" min="0" max="100" value="0">
+                                <input type="number" class="output-cell" data-oscillator="2" min="0" max="100" value="0">
+                                <input type="number" class="output-cell" data-oscillator="3" min="0" max="100" value="0">
+                                <input type="number" class="output-cell" data-oscillator="4" min="0" max="100" value="0">
+                                <input type="number" class="output-cell" data-oscillator="5" min="0" max="100" value="0">
+                                <input type="number" class="output-cell" data-oscillator="6" min="0" max="100" value="0">
+                                <input type="number" class="output-cell" data-oscillator="7" min="0" max="100" value="0">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             

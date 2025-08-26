@@ -23,10 +23,10 @@ export class OscillatorView {
     createTab() {
         this.tabElement = document.createElement('div');
         this.tabElement.className = 'oscillator-tab';
-        this.tabElement.dataset.oscillatorId = this.getModel().id + 1;
+        this.tabElement.dataset.oscillatorId = this.getModel().id;
         
         this.tabElement.innerHTML = `
-            OSC ${this.getModel().id}
+            OSC ${this.getModel().id + 1}
             <span class="oscillator-status">${this.getModel().isActive ? 'ON' : 'OFF'}</span>
         `;
         
