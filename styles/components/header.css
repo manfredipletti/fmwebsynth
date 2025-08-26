@@ -1,0 +1,74 @@
+
+.synth-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xxxl);
+    padding: var(--spacing-xxl);
+    background: linear-gradient(45deg, var(--panel-bg), var(--darker-bg));
+    border: 2px solid var(--neon-cyan);
+    border-radius: var(--radius-xl);
+    box-shadow: 
+        var(--shadow-neon-cyan),
+        var(--shadow-inset);
+}
+
+.synth-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(45deg, var(--neon-cyan), var(--neon-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: var(--letter-spacing-4);
+    animation: neon-pulse 3s ease-in-out infinite;
+}
+
+.synth-subtitle {
+    font-size: 1.2rem;
+    color: var(--neon-yellow);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-2);
+}
+
+.test-button {
+    background: var(--neon-yellow);
+    color: var(--darker-bg);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-1);
+    transition: all 0.3s ease;
+}
+
+.test-button:hover {
+    background: var(--neon-magenta);
+    color: var(--darker-bg);
+    box-shadow: var(--shadow-neon-magenta);
+    transform: translateY(-2px);
+}
+
+.test-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .synth-header {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xxl);
+    }
+    
+    .synth-title {
+        font-size: 2.5rem;
+    }
+    
+    .synth-subtitle {
+        font-size: 1rem;
+    }
+} 

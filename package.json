@@ -1,0 +1,29 @@
+{
+  "name": "fmwebsynth",
+  "version": "1.0.0",
+  "description": "FM Synthesizer Web App with 80s aesthetic",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "audiokeys": "^0.1.1",
+    "tone": "^14.9.17"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.0",
+    "vite": "^5.0.0"
+  },
+  "keywords": [
+    "synthesizer",
+    "fm",
+    "audio",
+    "web",
+    "80s"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

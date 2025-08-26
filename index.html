@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FM Web Synth</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="synth-container">
+        <header class="synth-header">
+            <h1 class="synth-title">FM WEB SYNTH</h1>
+            <div class="synth-subtitle">Frequency Modulation Synthesizer</div>
+        </header>
+        
+        <main class="synth-main">
+            <div class="oscillators-section">
+                <h2 class="section-title">OSCILLATORS</h2>
+                <div class="oscillators-tabs" id="oscillators-tabs">
+                </div>
+                <div class="oscillators-content" id="oscillators-content">
+                </div>
+            </div>
+            
+            <div class="modulation-section">
+                <h2 class="section-title">MODULATION MATRIX</h2>
+                <div class="modulation-matrix" id="modulation-matrix">
+                </div>
+            </div>
+            
+            <div class="effects-section">
+                <h2 class="section-title">EFFECTS & FILTERS</h2>
+                <div class="effects-controls">
+                </div>
+            </div>
+        </main>
+        
+        <footer class="synth-footer">
+            <div class="midi-status" id="midi-status">MIDI: Disconnected</div>
+            <div class="synth-info">FM Web Synth v1.0</div>
+        </footer>
+    </div>
+    
+    <script type="module" src="js/main.js"></script>
+</body>
+</html> 

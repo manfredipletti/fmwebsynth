@@ -1,0 +1,33 @@
+.synth-footer {
+    margin-top: var(--spacing-xxxl);
+    padding: var(--spacing-lg);
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.midi-status {
+    color: var(--neon-yellow);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-1);
+}
+
+.synth-info {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+
+@media (max-width: 768px) {
+    .synth-footer {
+        flex-direction: column;
+        text-align: center;
+        margin-top: var(--spacing-xxl);
+    }
+} 

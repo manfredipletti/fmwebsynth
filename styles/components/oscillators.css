@@ -1,0 +1,197 @@
+
+.oscillators-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--neon-cyan);
+    padding-bottom: var(--spacing-sm);
+}
+
+.oscillator-tab {
+    background: var(--darker-bg);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-1);
+    transition: all 0.3s ease;
+    min-width: 80px;
+    text-align: center;
+}
+
+.oscillator-tab:hover {
+    background: var(--neon-cyan);
+    color: var(--darker-bg);
+    box-shadow: var(--shadow-neon-cyan);
+    transform: translateY(-2px);
+}
+
+.oscillator-tab.active {
+    background: var(--neon-cyan);
+    color: var(--darker-bg);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+}
+
+.oscillator-tab.active .oscillator-status {
+    color: var(--neon-yellow);
+}
+
+.oscillator-status {
+    font-size: 0.7rem;
+    margin-top: 2px;
+    display: block;
+}
+
+.oscillators-content {
+    min-height: 400px;
+    position: relative;
+}
+
+.oscillator-panel {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.oscillator-panel.active {
+    display: block;
+}
+
+.oscillator {
+    background: linear-gradient(145deg, var(--darker-bg), var(--panel-bg));
+    border: 2px solid var(--neon-magenta);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: 
+        var(--shadow-neon-magenta),
+        var(--shadow-inset);
+    transition: all 0.3s ease;
+}
+
+.oscillator:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 0 25px rgba(255, 0, 255, 0.5),
+        var(--shadow-inset);
+}
+
+.oscillator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--neon-magenta);
+}
+
+.oscillator-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: var(--neon-magenta);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-1);
+}
+
+.oscillator-toggle {
+    background: var(--darker-bg);
+    border: 2px solid var(--neon-magenta);
+    color: var(--neon-magenta);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.oscillator-toggle:hover {
+    background: var(--neon-magenta);
+    color: var(--darker-bg);
+    box-shadow: var(--shadow-neon-magenta);
+}
+
+.oscillator-toggle.active {
+    background: var(--neon-magenta);
+    color: var(--darker-bg);
+}
+
+.oscillator-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.control-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-1);
+}
+
+.control-input {
+    background: var(--darker-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+}
+
+.control-input:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.control-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--neon-cyan);
+    background: var(--darker-bg);
+    border: 1px solid var(--neon-cyan);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    min-width: 60px;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .oscillators-tabs {
+        gap: var(--spacing-xs);
+    }
+    
+    .oscillator-tab {
+        min-width: 60px;
+        font-size: 0.8rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .oscillator-controls {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .oscillator {
+        padding: var(--spacing-md);
+    }
+} 

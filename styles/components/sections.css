@@ -1,0 +1,89 @@
+.synth-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxl);
+}
+
+.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: var(--neon-cyan);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-2);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.oscillators-section {
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: 
+        var(--shadow-neon-cyan),
+        var(--shadow-inset);
+}
+
+.modulation-section {
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: 
+        var(--shadow-neon-cyan),
+        var(--shadow-inset);
+}
+
+.modulation-matrix {
+    background: var(--darker-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.effects-section {
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: 
+        var(--shadow-neon-cyan),
+        var(--shadow-inset);
+}
+
+.effects-controls {
+    background: var(--darker-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .synth-main {
+        gap: var(--spacing-lg);
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .oscillators-section,
+    .modulation-section,
+    .effects-section {
+        padding: var(--spacing-lg);
+    }
+} 
