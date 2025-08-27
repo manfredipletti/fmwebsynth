@@ -1,7 +1,7 @@
 export class FilterModel {
     constructor() {
         this.type = 'lowpass';
-        this.frequency = 1000; // Hz
+        this.frequency = 20000; 
         this.resonance = 1.0; // Q factor
         this.rolloff = -24; // dB/oct
         this.isEnabled = true;

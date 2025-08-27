@@ -5,6 +5,8 @@ import { OscillatorView } from '../views/OscillatorView.js';
 import { ModulationMatrixView } from '../views/ModulationMatrixView.js';
 import { FilterModel } from '../models/FilterModel.js';
 import { FilterView } from '../views/FilterView.js';
+import { PitchEnvelopeModel } from '../models/PitchEnvelopeModel.js';
+import { PitchEnvelopeView } from '../views/PitchEnvelopeView.js';
 
 export class SynthController {
     constructor() {
@@ -14,6 +16,8 @@ export class SynthController {
         this.filterModel = null;
         this.filterView = null;
         this.globalFilter = null;
+        this.pitchEnvelopeModel = null;
+        this.pitchEnvelopeView = null;
         this.isInitialized = false;
         this.masterVolume = 0.7; 
         this.masterGainNode = null;
@@ -30,6 +34,7 @@ export class SynthController {
             this.initKeyboard();
             this.initModulationMatrix();
             this.initFilter();
+            this.initPitchEnvelope();
 
             this.isInitialized = true;
             console.log('Synth Controller initialized successfully');
@@ -448,6 +453,52 @@ export class SynthController {
 
     midiNoteToFrequency(note) {
         return 440 * Math.pow(2, (note - 69) / 12);
+    }
+
+    initPitchEnvelope() {
+        this.pitchEnvelopeModel = new PitchEnvelopeModel();
+        this.pitchEnvelopeView = new PitchEnvelopeView(this.pitchEnvelopeModel, this);
+        console.log('Pitch envelope initialized');
+    }
+
+    getPitchEnvelopeSettings() {
+        return this.pitchEnvelopeModel ? this.pitchEnvelopeModel.getSettings() : null;
+    }
+
+    setPitchEnvelopeAttack(attack) {
+        if (this.pitchEnvelopeModel) {
+            this.pitchEnvelopeModel.setAttack(attack);
+        }
+    }
+
+    setPitchEnvelopeDecay(decay) {
+        if (this.pitchEnvelopeModel) {
+            this.pitchEnvelopeModel.setDecay(decay);
+        }
+    }
+
+    setPitchEnvelopeSustain(sustain) {
+        if (this.pitchEnvelopeModel) {
+            this.pitchEnvelopeModel.setSustain(sustain);
+        }
+    }
+
+    setPitchEnvelopeRelease(release) {
+        if (this.pitchEnvelopeModel) {
+            this.pitchEnvelopeModel.setRelease(release);
+        }
+    }
+
+    setPitchEnvelopeAmount(amount) {
+        if (this.pitchEnvelopeModel) {
+            this.pitchEnvelopeModel.setAmount(amount);
+        }
+    }
+
+    setPitchEnvelopeEnabled(enabled) {
+        if (this.pitchEnvelopeModel) {
+            this.pitchEnvelopeModel.setIsEnabled(enabled);
+        }
     }
 
     dispose() {

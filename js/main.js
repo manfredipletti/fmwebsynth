@@ -263,7 +263,6 @@ window.addEventListener('unhandledrejection', (event) => {
     showErrorMessage('An unhandled error occurred. Check console for details.');
 });
 
-// Cleanup when page is unloaded
 window.addEventListener('beforeunload', () => {
     if (window.synthController) {
         window.synthController.dispose();
@@ -335,20 +334,12 @@ function initEnvelopeTabs() {
 
 
 function initEnvelopeDisplays() {
-
-    updateEnvelopeDisplay('amp-attack-value', 0.0, 's');
-    updateEnvelopeDisplay('amp-decay-value', 0.3, 's');
-    updateEnvelopeDisplay('amp-sustain-value', 0.8, '');
-    updateEnvelopeDisplay('amp-release-value', 1.0, 's');
-    
-
     updateEnvelopeDisplay('pitch-amount-value', 0, ' cents');
     updateEnvelopeDisplay('pitch-attack-value', 0.0, 's');
     updateEnvelopeDisplay('pitch-decay-value', 0.3, 's');
     updateEnvelopeDisplay('pitch-sustain-value', 0.0, '');
     updateEnvelopeDisplay('pitch-release-value', 1.0, 's');
     
-
     updateEnvelopeDisplay('filter-amount-value', 0, ' Hz');
     updateEnvelopeDisplay('filter-attack-value', 0.0, 's');
     updateEnvelopeDisplay('filter-decay-value', 0.3, 's');
