@@ -97,7 +97,17 @@ export class SynthController {
         const oscillator = this.getOscillator(oscillatorId);
         if (oscillator) {
             for (const [note, voice] of oscillator.voices) {
-                if (voice.gainNode) {
+
+                if (Array.isArray(voice.gainNodes)) {
+          
+                    const mainGainNode = voice.gainNodes[0]; 
+                    if (mainGainNode && mainGainNode.gain) {
+                        const currentGain = mainGainNode.gain.value;
+                        const baseGain = currentGain / (this.getOutputVolume(oscillatorId) || 0.01); 
+                        mainGainNode.gain.value = baseGain * newVolume;
+                    }
+                } else if (voice.gainNode && voice.gainNode.gain) {
+
                     const currentGain = voice.gainNode.gain.value;
                     const baseGain = currentGain / (this.getOutputVolume(oscillatorId) || 0.01); 
                     voice.gainNode.gain.value = baseGain * newVolume;
@@ -125,7 +135,13 @@ export class SynthController {
                     const carrierOsc = carrier.voices.get(note).toneOsc;
                     if (carrierId != modulatorId) {
                         
-                        const modulatorEnvelope = this.getOscillator(modulatorId).voices.get(note).envelope;
+                        var modulatorEnvelope = null;
+                        if (Array.isArray(this.getOscillator(modulatorId).voices.get(note).envelope)) {
+                            modulatorEnvelope = this.getOscillator(modulatorId).voices.get(note).envelope[0];
+                        } else {
+                            modulatorEnvelope = this.getOscillator(modulatorId).voices.get(note).envelope;
+                        }
+        
                         const modulationGain = new this.Tone.Gain(modulationValue * 100);
                         modulatorEnvelope.connect(modulationGain);
                         modulationGain.connect(carrierOsc.frequency);
@@ -409,39 +425,89 @@ export class SynthController {
     playOscillators(note, frequency, velocity) {
 
         try {
+
+            let pitchEnvelope = null;
+            let pitchGain = null;
+            if (this.pitchEnvelopeModel && this.pitchEnvelopeModel.getIsEnabled() && this.pitchEnvelopeModel.getAmount() !== 0) {
+                pitchEnvelope = new this.Tone.Envelope({
+                    attack: this.pitchEnvelopeModel.getAttack(),
+                    decay: this.pitchEnvelopeModel.getDecay(),
+                    sustain: this.pitchEnvelopeModel.getSustain(),
+                    release: this.pitchEnvelopeModel.getRelease()
+                });
+                
+                const pitchAmount = this.pitchEnvelopeModel.getAmount();
+                const baseFrequency = frequency; 
+                const targetFrequency = baseFrequency * Math.pow(2, pitchAmount / 12);
+                const frequencyShift = targetFrequency - baseFrequency;
+
+                pitchGain = new this.Tone.Gain(frequencyShift);
+                
+                pitchEnvelope.connect(pitchGain);
+            }
+
             for (const osc of this.oscillators) {
                 osc.removeVoice(note);
-                                 if (osc.isActive) {
-                     const realFrequency = frequency * osc.ratio;
-                     const initialPhase = osc.getInitialPhase();
-                     const toneOsc = new this.Tone.Oscillator(realFrequency, osc.waveform);
-                     toneOsc.phase = initialPhase;
+                if (osc.isActive) {
+                    const realFrequency = frequency * osc.ratio;
+                    const initialPhase = osc.getInitialPhase();
+                    const toneOsc = new this.Tone.Oscillator(realFrequency, osc.waveform);
+                    toneOsc.phase = initialPhase;
+                    
+                    if (pitchEnvelope && pitchGain) {
+        
+                        pitchGain.connect(toneOsc.frequency);
+                 
+                        toneOsc.frequency.value = realFrequency;
+                    }
+                    
                     const envelope = new this.Tone.AmplitudeEnvelope({
                         attack: osc.attack,
                         decay: osc.decay,
                         sustain: osc.sustain,
                         release: osc.release
                     });
-                                         const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
-                     toneOsc.connect(envelope);
-                     envelope.connect(gainNode);
-                     gainNode.connect(this.masterGainNode);
+                    
+                    const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
+                    toneOsc.connect(envelope);
+                    envelope.connect(gainNode);
+                    gainNode.connect(this.masterGainNode);
 
-                    osc.addVoice(note, toneOsc, envelope, gainNode);
+         
+                    if (pitchEnvelope && pitchGain) {
+                        osc.addVoice(note, toneOsc, [envelope, pitchEnvelope], [gainNode, pitchGain]);
+                    } else {
+                        osc.addVoice(note, toneOsc, envelope, gainNode);
+                    }
                 }
             }
             
             // STEP 2: Creare le connessioni FM dalla modulation matrix
             this.createFMConnections(note);
             
-            // STEP 2: Suonare gli oscillatori attivi
+            // STEP 3: Suonare gli oscillatori attivi
             for (const osc of this.oscillators) {
                 if (osc.isActive) {
-                    osc.voices.get(note).toneOsc.start();
-                    osc.voices.get(note).envelope.triggerAttack();
-                    if (osc.selfModulations.has(note)) {
-                        osc.selfModulations.get(note).selfModulationOsc.start();
-                        osc.selfModulations.get(note).selfModulationEnvelope.triggerAttack();
+                    const voice = osc.voices.get(note);
+                    if (voice) {
+                
+                        if (Array.isArray(voice.envelope)) {
+                
+                            voice.toneOsc.start(); 
+                            voice.envelope.forEach(envelope => {
+                                envelope.triggerAttack();
+                            });
+                        } else {
+                     
+                            voice.toneOsc.start();
+                            voice.envelope.triggerAttack();
+                        }
+                        
+                 
+                        if (osc.selfModulations.has(note)) {
+                            osc.selfModulations.get(note).selfModulationOsc.start();
+                            osc.selfModulations.get(note).selfModulationEnvelope.triggerAttack();
+                        }
                     }
                 }
             }

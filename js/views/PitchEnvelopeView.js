@@ -91,7 +91,7 @@ export class PitchEnvelopeView {
         if (this.amountSlider && this.amountValue) {
             const amount = this.model.getAmount();
             this.amountSlider.value = amount;
-            this.amountValue.textContent = `${amount} cents`;
+            this.amountValue.textContent = `${amount} st`;
         }
     }
     

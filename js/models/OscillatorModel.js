@@ -25,12 +25,14 @@ export class OscillatorModel {
         }
     }
 
-    addVoice(note, toneOsc, envelope, gainNode) {
+    addVoice(note, toneOsc, envelopes, gainNodes) {
         if (this.voices.size >= this.maxVoices) {
             const oldestNote = this.voices.keys().next().value;
             this.removeVoice(oldestNote);
         }
-        this.voices.set(note, {toneOsc, envelope, gainNode});
+
+        this.voices.set(note, {toneOsc: toneOsc, envelope: envelopes, gainNode: gainNodes});
+
     }
 
     addSelfModulation(note, selfModulationOsc, selfModulationEnvelope, selfModulationGain) {
@@ -69,14 +71,25 @@ export class OscillatorModel {
     removeVoice(note) {
         const voice = this.voices.get(note);
         if (voice) {
+    
+            if (Array.isArray(voice.envelope)) {
+      
+                voice.envelope.forEach(env => {
 
-            voice.envelope.triggerRelease();
-            
-     
-            const releaseTime = voice.envelope.release;
-            setTimeout(() => {
-                this.disposeVoice(voice);
-            }, releaseTime * 1000 + 100); 
+                    env.triggerRelease();
+                });
+                const releaseTime = voice.envelope[0].release;
+                setTimeout(() => {
+                    this.disposeVoice(voice);
+                }, releaseTime * 1000 + 100);
+            } else {
+   
+                voice.envelope.triggerRelease();
+                const releaseTime = voice.envelope.release;
+                setTimeout(() => {
+                    this.disposeVoice(voice);
+                }, releaseTime * 1000 + 100);
+            }
             
             this.voices.delete(note);
         }
@@ -84,17 +97,26 @@ export class OscillatorModel {
 
     disposeVoice(voice) {
         try {
-            if (voice.toneOsc) {
-                voice.toneOsc.stop();
-                voice.toneOsc.dispose();
-            }
-            if (voice.envelope) {
-                voice.envelope.dispose();
-            }
-            if (voice.gainNode) {
-                voice.gainNode.dispose();
-            }
-
+                if (voice.toneOsc) {
+                    voice.toneOsc.stop();
+                    voice.toneOsc.dispose();
+                }
+                if (Array.isArray(voice.envelope)) {
+                    voice.envelope.forEach(env => {
+                        env.dispose();
+                    })
+                } else {
+                    voice.envelope.dispose();
+                }
+                if (Array.isArray(voice.gainNode)) {
+                    voice.gainNode.forEach(gain => {
+                        gain.dispose();
+                    })
+                } else {
+                    voice.gainNode.dispose();
+                }
+      
+            
         } catch (error) {
             console.warn('Error disposing voice:', error);
         }

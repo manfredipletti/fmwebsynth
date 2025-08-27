@@ -4,7 +4,7 @@ export class PitchEnvelopeModel {
         this.decay = 0.3;       
         this.sustain = 0.0;    
         this.release = 1.0;     
-        this.amount = 0;        
+        this.amount = 0;       
         this.isEnabled = true; 
         
         console.log('PitchEnvelopeModel initialized');
@@ -38,8 +38,8 @@ export class PitchEnvelopeModel {
     }
     
     setAmount(amount) {
-        this.amount = Math.max(-2400, Math.min(2400, amount));
-        console.log(`Pitch envelope amount set to: ${this.amount} cents`);
+        this.amount = Math.max(-48, Math.min(48, amount));
+        console.log(`Pitch envelope amount set to: ${this.amount} semitones`);
     }
     
     setIsEnabled(enabled) {
