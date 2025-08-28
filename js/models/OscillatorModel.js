@@ -147,4 +147,15 @@ export class OscillatorModel {
         };
     }
 
+    applySettings(settings) {
+        if (settings.waveform !== undefined) this.waveform = settings.waveform;
+        if (settings.ratio !== undefined) this.ratio = settings.ratio;
+        if (settings.attack !== undefined) this.attack = settings.attack;
+        if (settings.decay !== undefined) this.decay = settings.decay;
+        if (settings.sustain !== undefined) this.sustain = settings.sustain;
+        if (settings.release !== undefined) this.release = settings.release;
+        if (settings.phase !== undefined) this.phase = settings.phase;
+        if (settings.enabled !== undefined) this.isActive = settings.enabled;
+    }
+
 }

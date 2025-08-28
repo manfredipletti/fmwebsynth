@@ -55,4 +55,13 @@ export class FilterEnvelopeModel {
             release: this.release
         };
     }
+
+    applySettings(settings) {
+        if (settings.attack !== undefined) this.setAttack(settings.attack);
+        if (settings.decay !== undefined) this.setDecay(settings.decay);
+        if (settings.sustain !== undefined) this.setSustain(settings.sustain);
+        if (settings.release !== undefined) this.setRelease(settings.release);
+        if (settings.amount !== undefined) this.setAmount(settings.amount);
+        if (settings.isEnabled !== undefined) this.setIsEnabled(settings.isEnabled);
+    }
 }

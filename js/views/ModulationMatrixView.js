@@ -270,4 +270,39 @@ export class ModulationMatrixView {
         
         return values;
     }
+
+    setMatrixValues(matrixValues) {
+        if (!matrixValues || typeof matrixValues !== 'object') {
+            console.warn('ModulationMatrixView: setMatrixValues expects an object');
+            return;
+        }
+
+        const matrixCells = document.querySelectorAll('.matrix-cell');
+        matrixCells.forEach(cell => {
+            const modulator = parseInt(cell.dataset.modulator);
+            const carrier = parseInt(cell.dataset.carrier);
+            const value = matrixValues[modulator] && matrixValues[modulator][carrier] !== undefined 
+                ? matrixValues[modulator][carrier] 
+                : 0;
+            
+            cell.value = value;
+            this.updateCellIllumination(cell);
+        });
+    }
+
+    setOutputValues(outputValues) {
+        if (!outputValues || typeof outputValues !== 'object') {
+            console.warn('ModulationMatrixView: setOutputValues expects an object');
+            return;
+        }
+
+        const outputCells = document.querySelectorAll('.output-cell');
+        outputCells.forEach(cell => {
+            const oscillator = parseInt(cell.dataset.oscillator);
+            const value = outputValues[oscillator] !== undefined ? outputValues[oscillator] : 0;
+            
+            cell.value = value;
+            this.updateCellIllumination(cell);
+        });
+    }
 }

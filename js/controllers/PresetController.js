@@ -109,8 +109,156 @@ class PresetController {
         }
     }
 
-    importPresetFromFile(file) {
-        console.log('Import preset - da implementare');
+    async importPresetFromFile(file) {
+        try {
+            console.log('PresetController: Iniziando import...');
+            
+            const text = await file.text();
+            const preset = JSON.parse(text);
+            
+            if (!preset.oscillators || !preset.filter) {
+                console.error('PresetController: File non valido - formato preset non riconosciuto');
+                return;
+            }
+            
+            console.log('PresetController: Preset caricato:', preset);
+            
+            // Applica il preset
+            this.applyPreset(preset);
+            
+            console.log('PresetController: Preset importato con successo');
+            
+        } catch (error) {
+            console.error('PresetController: Errore nell\'importazione del preset:', error);
+        }
+    }
+
+    applyPreset(preset) {
+        console.log('PresetController: Applicando preset...');
+        
+        try {
+            if (preset.oscillators) {
+                preset.oscillators.forEach(osc => {
+                    if (this.synthController.oscillators[osc.id]) {
+                        const oscillator = this.synthController.oscillators[osc.id];
+                        oscillator.applySettings(osc);
+                    }
+                });
+            }
+
+            if (preset.filter) {
+                this.synthController.filterModel.applySettings(preset.filter);
+            }
+
+            if (preset.filterEnvelope) {
+                this.synthController.filterEnvelopeModel.applySettings(preset.filterEnvelope);
+            }
+
+            if (preset.pitchEnvelope) {
+                this.synthController.pitchEnvelopeModel.applySettings(preset.pitchEnvelope);
+            }
+
+            if (preset.delay) {
+                if (preset.delay.delayTime !== undefined) {
+                    this.synthController.setDelayTime(preset.delay.delayTime);
+                }
+                if (preset.delay.feedback !== undefined) {
+                    this.synthController.setDelayFeedback(preset.delay.feedback);
+                }
+                if (preset.delay.wet !== undefined) {
+                    this.synthController.setDelayWet(preset.delay.wet);
+                }
+                if (preset.delay.isEnabled !== undefined) {
+                    this.synthController.setDelayEnabled(preset.delay.isEnabled);
+                }
+            }
+
+            if (preset.reverb) {
+                if (preset.reverb.decay !== undefined) {
+                    this.synthController.setReverbDecay(preset.reverb.decay);
+                }
+                if (preset.reverb.predelay !== undefined) {
+                    this.synthController.setReverbPredelay(preset.reverb.predelay);
+                }
+                if (preset.reverb.dryWet !== undefined) {
+                    this.synthController.setReverbDryWet(preset.reverb.dryWet);
+                }
+                if (preset.reverb.isEnabled !== undefined) {
+                    this.synthController.setReverbEnabled(preset.reverb.isEnabled);
+                }
+            }
+
+            if (preset.compressor) {
+                if (preset.compressor.threshold !== undefined) {
+                    this.synthController.setCompressorThreshold(preset.compressor.threshold);
+                }
+                if (preset.compressor.attack !== undefined) {
+                    this.synthController.setCompressorAttack(preset.compressor.attack);
+                }
+                if (preset.compressor.release !== undefined) {
+                    this.synthController.setCompressorRelease(preset.compressor.release);
+                }
+                if (preset.compressor.ratio !== undefined) {
+                    this.synthController.setCompressorRatio(preset.compressor.ratio);
+                }
+                if (preset.compressor.isEnabled !== undefined) {
+                    this.synthController.setCompressorEnabled(preset.compressor.isEnabled);
+                }
+            }
+
+            if (preset.modulationMatrix) {
+                this.synthController.modulationMatrixView.setMatrixValues(preset.modulationMatrix);
+            }
+
+            if (preset.outputValues) {
+                this.synthController.modulationMatrixView.setOutputValues(preset.outputValues);
+            }
+
+            this.updateAllViews();
+            
+            console.log('PresetController: Preset applicato con successo');
+            
+        } catch (error) {
+            console.error('PresetController: Errore nell\'applicazione del preset:', error);
+        }
+    }
+
+    updateAllViews() {
+        console.log('PresetController: Aggiornando tutte le viste...');
+        
+        try {
+            if (this.synthController.oscillatorViews) {
+                this.synthController.oscillatorViews.forEach((view, index) => {
+                    if (view && view.updateDisplay) {
+                        view.updateDisplay();
+                    }
+                });
+            }
+
+
+            if (this.synthController.filterView && this.synthController.filterView.updateDisplay) {
+                this.synthController.filterView.updateDisplay();
+            }
+            if (this.synthController.filterEnvelopeView && this.synthController.filterEnvelopeView.updateAllControls) {
+                this.synthController.filterEnvelopeView.updateAllControls(this.synthController.filterEnvelopeModel);
+            }
+            if (this.synthController.pitchEnvelopeView && this.synthController.pitchEnvelopeView.updateAllControls) {
+                this.synthController.pitchEnvelopeView.updateAllControls(this.synthController.pitchEnvelopeModel);
+            }
+            if (this.synthController.delayView && this.synthController.delayView.updateAllControls) {
+                this.synthController.delayView.updateAllControls(this.synthController.delayModel);
+            }
+            if (this.synthController.reverbView && this.synthController.reverbView.updateAllControls) {
+                this.synthController.reverbView.updateAllControls(this.synthController.reverbModel);
+            }
+            if (this.synthController.compressorView && this.synthController.compressorView.updateAllControls) {
+                this.synthController.compressorView.updateAllControls(this.synthController.compressorModel);
+            }
+
+            console.log('PresetController: Tutte le viste aggiornate');
+        } catch (error) {
+            console.error('PresetController: Errore nell\'aggiornamento delle viste:', error);
+        }
     }
 }
 
