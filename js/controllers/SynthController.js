@@ -47,6 +47,8 @@ export class SynthController {
         this.compressorOutputNode = null;
         this.masterGainNode = null;
         this.masterMeter = null;
+        this.midiAccess = null;
+        this.midiInputs = [];
         this.init();
     }
 
@@ -57,6 +59,7 @@ export class SynthController {
             this.createOscillators();
             this.initUI();
             this.initKeyboard();
+            this.initMIDI();
             this.initModulationMatrix();
             this.initFilter();
             this.initPitchEnvelope();
@@ -82,6 +85,101 @@ export class SynthController {
         keyboard.up((note) => {
             this.noteOff(note.note, note.velocity);
         });
+    }
+
+    initMIDI() {
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess()
+                .then(this.onMIDISuccess.bind(this), this.onMIDIError.bind(this));
+        } else {
+            console.warn('Web MIDI API not supported');
+            this.updateMIDIStatus('Web MIDI API not supported');
+        }
+    }
+
+    onMIDISuccess(midiAccess) {
+        this.midiAccess = midiAccess;
+        this.midiInputs = [];
+        
+        for (let input of midiAccess.inputs.values()) {
+            this.midiInputs.push(input);
+            input.onmidimessage = this.onMIDIMessage.bind(this);
+            console.log('MIDI Input connected:', input.name || 'Unknown');
+        }
+        
+        midiAccess.onstatechange = this.onMIDIStateChange.bind(this);
+        
+        this.updateMIDIStatus(`Connected: ${this.midiInputs.length} device(s)`);
+        console.log('MIDI initialized successfully');
+    }
+
+    onMIDIError(error) {
+        console.error('MIDI access denied:', error);
+        this.updateMIDIStatus('Access denied');
+    }
+
+    onMIDIStateChange(event) {
+        const port = event.port;
+        if (port.type === 'input') {
+            if (port.state === 'connected') {
+                port.onmidimessage = this.onMIDIMessage.bind(this);
+                this.midiInputs.push(port);
+                console.log('MIDI Input connected:', port.name || 'Unknown');
+            } else if (port.state === 'disconnected') {
+                this.midiInputs = this.midiInputs.filter(input => input !== port);
+                console.log('MIDI Input disconnected:', port.name || 'Unknown');
+            }
+            this.updateMIDIStatus(`Connected: ${this.midiInputs.length} device(s)`);
+        }
+    }
+
+    onMIDIMessage(event) {
+        const command = event.data[0];
+        const note = event.data[1];
+        const velocity = event.data[2];
+
+        switch (command & 0xF0) {
+            case 0x90: 
+                if (velocity > 0) {
+                    this.noteOn(note, velocity);
+                } else {
+                    this.noteOff(note);
+                }
+                break;
+            case 0x80:
+                this.noteOff(note);
+                break;
+            case 0xE0:
+                const pitchBend = ((event.data[2] << 7) | event.data[1]) / 8192 - 1;
+                this.onMIDIPitchBend(pitchBend);
+                break;
+        }
+    }
+
+
+
+    onMIDIPitchBend(bend) {
+
+        const bendSemitones = bend * 2; 
+        
+        for (const oscillator of this.oscillators) {
+            if (oscillator.isActive) {
+                for (const [note, voice] of oscillator.voices) {
+                    if (voice.toneOsc && voice.toneOsc.frequency) {
+                        const baseFreq = this.midiNoteToFrequency(note);
+                        const bentFreq = baseFreq * Math.pow(2, bendSemitones / 12);
+                        voice.toneOsc.frequency.value = bentFreq;
+                    }
+                }
+            }
+        }
+    }
+
+    updateMIDIStatus(status) {
+        const midiStatusElement = document.getElementById('midi-status');
+        if (midiStatusElement) {
+            midiStatusElement.textContent = `MIDI: ${status}`;
+        }
     }
 
     initModulationMatrix() {
@@ -731,7 +829,7 @@ export class SynthController {
 
     noteOn(note, velocity) {
         const frequency = this.midiNoteToFrequency(note);
-        const normalizedVelocity = velocity / 127;
+        const normalizedVelocity = velocity <= 1 ? velocity : velocity / 127;
         this.playOscillators(note, frequency, normalizedVelocity);
         
         
@@ -946,10 +1044,21 @@ export class SynthController {
         this.oscillators.forEach(oscillator => {
             oscillator.forceDisposeAllVoices();
         });
-        
-
+    
         if (this.globalDelay) {
             this.globalDelay.dispose();
         }
+        if (this.globalReverb) {
+            this.globalReverb.dispose();
+        }
+        if (this.globalCompressor) {
+            this.globalCompressor.dispose();
+        }
+        
+        if (this.midiAccess) {
+            this.midiAccess.close();
+            this.midiAccess = null;
+        }
+        this.midiInputs = [];
     }
 }
