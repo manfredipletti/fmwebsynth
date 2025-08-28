@@ -420,7 +420,7 @@ export class SynthController {
     setFilterEnvelopeAmount(amount) {
         if (this.filterEnvelopeModel) {
             const clampedAmount = this.filterEnvelopeModel.setAmount(amount);
-            console.log(`Filter envelope amount changed to: ${clampedAmount} semitones`);
+            console.log(`Filter envelope amount changed to: ${clampedAmount}%`);
         }
     }
 
@@ -531,8 +531,15 @@ export class SynthController {
                         
                         const filterAmount = this.filterEnvelopeModel.getAmount();
                         const baseFrequency = this.filterModel.frequency;
-                        const targetFrequency = baseFrequency * Math.pow(2, filterAmount / 12);
-                        const frequencyShift = targetFrequency - baseFrequency;
+
+
+                        var frequencyShift;
+                        if (filterAmount >= 0) {
+                            frequencyShift = (20000 - baseFrequency) * (filterAmount/100);
+                        } else {
+                            frequencyShift = (baseFrequency - 20) * (filterAmount/100);
+                        }
+              
                         
                         filterGain = new this.Tone.Gain(frequencyShift);
                         filterEnvelope.connect(filterGain);

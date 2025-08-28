@@ -366,7 +366,7 @@ function initEnvelopeDisplays() {
     updateEnvelopeDisplay('pitch-sustain-value', 0.0, '');
     updateEnvelopeDisplay('pitch-release-value', 1.0, 's');
     
-    updateEnvelopeDisplay('filter-amount-value', 0, ' st');
+    updateEnvelopeDisplay('filter-amount-value', 0, ' %');
     updateEnvelopeDisplay('filter-attack-value', 0.001, 's');
     updateEnvelopeDisplay('filter-decay-value', 0.3, 's');
     updateEnvelopeDisplay('filter-sustain-value', 1.0, '%');

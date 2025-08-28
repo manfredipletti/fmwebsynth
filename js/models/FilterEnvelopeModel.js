@@ -29,7 +29,7 @@ export class FilterEnvelopeModel {
     }
 
     setAmount(amount) {
-        this.amount = Math.max(-48, Math.min(48, amount));
+        this.amount = Math.max(-100, Math.min(100, amount));
         return this.amount;
     }
 

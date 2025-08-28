@@ -109,7 +109,7 @@ export class FilterEnvelopeView {
     updateAmountDisplay(amount) {
         const display = document.getElementById('filter-amount-value');
         if (display) {
-            display.textContent = `${amount}st`;
+            display.textContent = `${amount}%`;
         }
     }
 
