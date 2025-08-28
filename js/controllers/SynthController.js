@@ -7,6 +7,8 @@ import { FilterModel } from '../models/FilterModel.js';
 import { FilterView } from '../views/FilterView.js';
 import { PitchEnvelopeModel } from '../models/PitchEnvelopeModel.js';
 import { PitchEnvelopeView } from '../views/PitchEnvelopeView.js';
+import { FilterEnvelopeModel } from '../models/FilterEnvelopeModel.js';
+import { FilterEnvelopeView } from '../views/FilterEnvelopeView.js';
 
 export class SynthController {
     constructor() {
@@ -15,6 +17,8 @@ export class SynthController {
         this.modulationMatrixView = null;
         this.filterModel = null;
         this.filterView = null;
+        this.filterEnvelopeModel = null;
+        this.filterEnvelopeView = null;
         this.pitchEnvelopeModel = null;
         this.pitchEnvelopeView = null;
         this.isInitialized = false;
@@ -67,6 +71,8 @@ export class SynthController {
         this.filterModel = new FilterModel();
         this.filterView = new FilterView(this);
         
+        this.filterEnvelopeModel = new FilterEnvelopeModel();
+        this.filterEnvelopeView = new FilterEnvelopeView(this);
 
         console.log('Filter model and view initialized');
     }
@@ -382,6 +388,49 @@ export class SynthController {
         }
     }
 
+
+    setFilterEnvelopeAttack(attack) {
+        if (this.filterEnvelopeModel) {
+            const clampedAttack = this.filterEnvelopeModel.setAttack(attack);
+            console.log(`Filter envelope attack changed to: ${clampedAttack}s`);
+        }
+    }
+
+    setFilterEnvelopeDecay(decay) {
+        if (this.filterEnvelopeModel) {
+            const clampedDecay = this.filterEnvelopeModel.setDecay(decay);
+            console.log(`Filter envelope decay changed to: ${clampedDecay}s`);
+        }
+    }
+
+    setFilterEnvelopeSustain(sustain) {
+        if (this.filterEnvelopeModel) {
+            const clampedSustain = this.filterEnvelopeModel.setSustain(sustain);
+            console.log(`Filter envelope sustain changed to: ${clampedSustain}`);
+        }
+    }
+
+    setFilterEnvelopeRelease(release) {
+        if (this.filterEnvelopeModel) {
+            const clampedRelease = this.filterEnvelopeModel.setRelease(release);
+            console.log(`Filter envelope release changed to: ${clampedRelease}s`);
+        }
+    }
+
+    setFilterEnvelopeAmount(amount) {
+        if (this.filterEnvelopeModel) {
+            const clampedAmount = this.filterEnvelopeModel.setAmount(amount);
+            console.log(`Filter envelope amount changed to: ${clampedAmount} semitones`);
+        }
+    }
+
+    setFilterEnvelopeEnabled(enabled) {
+        if (this.filterEnvelopeModel) {
+            this.filterEnvelopeModel.setIsEnabled(enabled);
+            console.log(`Filter envelope ${enabled ? 'enabled' : 'disabled'}`);
+        }
+    }
+
     getFilterSettings() {
         return this.filterModel ? this.filterModel.getSettings() : null;
     }
@@ -461,12 +510,34 @@ export class SynthController {
                     
                     const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
                     
+
                     const noteFilter = new this.Tone.Filter({
                         type: this.filterModel.type,
                         frequency: this.filterModel.frequency,
                         Q: this.filterModel.resonance,
                         rolloff: this.filterModel.rolloff
                     });
+
+
+                    let filterEnvelope = null;
+                    let filterGain = null;
+                    if (this.filterEnvelopeModel && this.filterEnvelopeModel.getIsEnabled() && this.filterEnvelopeModel.getAmount() !== 0) {
+                        filterEnvelope = new this.Tone.Envelope({
+                            attack: this.filterEnvelopeModel.getAttack(),
+                            decay: this.filterEnvelopeModel.getDecay(),
+                            sustain: this.filterEnvelopeModel.getSustain(),
+                            release: this.filterEnvelopeModel.getRelease()
+                        });
+                        
+                        const filterAmount = this.filterEnvelopeModel.getAmount();
+                        const baseFrequency = this.filterModel.frequency;
+                        const targetFrequency = baseFrequency * Math.pow(2, filterAmount / 12);
+                        const frequencyShift = targetFrequency - baseFrequency;
+                        
+                        filterGain = new this.Tone.Gain(frequencyShift);
+                        filterEnvelope.connect(filterGain);
+                        filterGain.connect(noteFilter.frequency);
+                    }
                     
 
                     toneOsc.connect(envelope);
@@ -476,8 +547,12 @@ export class SynthController {
 
          
     
-                    if (pitchEnvelope && pitchGain) {
+                    if (pitchEnvelope && pitchGain && filterEnvelope && filterGain) {
+                        osc.addVoice(note, toneOsc, [envelope, pitchEnvelope, filterEnvelope], [gainNode, pitchGain, filterGain], noteFilter);
+                    } else if (pitchEnvelope && pitchGain) {
                         osc.addVoice(note, toneOsc, [envelope, pitchEnvelope], [gainNode, pitchGain], noteFilter);
+                    } else if (filterEnvelope && filterGain) {
+                        osc.addVoice(note, toneOsc, [envelope, filterEnvelope], [gainNode, filterGain], noteFilter);
                     } else {
                         osc.addVoice(note, toneOsc, envelope, gainNode, noteFilter);
                     }

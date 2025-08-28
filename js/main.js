@@ -9,6 +9,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         addTestButton();
         initMasterVolume();
         initEnvelopeTabs();
+        
+
+        setTimeout(() => {
+            if (window.synthController) {
+                if (window.synthController.filterEnvelopeView) {
+                    window.synthController.filterEnvelopeView.updateAllControls(window.synthController.filterEnvelopeModel);
+                }
+                if (window.synthController.pitchEnvelopeView) {
+                    window.synthController.pitchEnvelopeView.updateAllControls(window.synthController.pitchEnvelopeModel);
+                }
+            }
+        }, 100);
 
         
         console.log('FM Web Synth - Ready!');
@@ -191,7 +203,7 @@ function updateVolumeMeter(level) {
         if (level < 0.001) {
 
             const currentHeight = parseFloat(volumeBar.style.height) || 0;
-            const targetHeight = currentHeight * 0.85; // Faster decay to zero
+            const targetHeight = currentHeight * 0.85; 
             volumeBar.style.height = targetHeight + '%';
             volumeBar.classList.remove('active');
             return;
@@ -304,6 +316,13 @@ function initEnvelopeTabs() {
         return;
     }
     
+    // Set PITCH ENV as default active tab
+    const pitchTab = document.querySelector('[data-envelope="pitch"]');
+    const pitchPanel = document.querySelector('[data-envelope="pitch"].envelope-panel');
+    if (pitchTab && pitchPanel) {
+        pitchTab.classList.add('active');
+        pitchPanel.classList.add('active');
+    }
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -320,6 +339,13 @@ function initEnvelopeTabs() {
             const targetPanel = document.querySelector(`[data-envelope="${targetEnvelope}"].envelope-panel`);
             if (targetPanel) {
                 targetPanel.classList.add('active');
+                
+                // Update controls for the selected envelope
+                if (targetEnvelope === 'filter' && window.synthController && window.synthController.filterEnvelopeView) {
+                    window.synthController.filterEnvelopeView.updateAllControls(window.synthController.filterEnvelopeModel);
+                } else if (targetEnvelope === 'pitch' && window.synthController && window.synthController.pitchEnvelopeView) {
+                    window.synthController.pitchEnvelopeView.updateAllControls(window.synthController.pitchEnvelopeModel);
+                }
             }
             
             console.log(`Switched to ${targetEnvelope} envelope`);
@@ -340,10 +366,10 @@ function initEnvelopeDisplays() {
     updateEnvelopeDisplay('pitch-sustain-value', 0.0, '');
     updateEnvelopeDisplay('pitch-release-value', 1.0, 's');
     
-    updateEnvelopeDisplay('filter-amount-value', 0, ' Hz');
-    updateEnvelopeDisplay('filter-attack-value', 0.0, 's');
+    updateEnvelopeDisplay('filter-amount-value', 0, ' st');
+    updateEnvelopeDisplay('filter-attack-value', 0.001, 's');
     updateEnvelopeDisplay('filter-decay-value', 0.3, 's');
-    updateEnvelopeDisplay('filter-sustain-value', 0.5, '');
+    updateEnvelopeDisplay('filter-sustain-value', 1.0, '%');
     updateEnvelopeDisplay('filter-release-value', 1.0, 's');
 }
 
@@ -352,10 +378,14 @@ function updateEnvelopeDisplay(elementId, value, unit) {
     const element = document.getElementById(elementId);
     if (element) {
         if (unit === 's') {
-            element.textContent = value.toFixed(2) + unit;
+            element.textContent = value.toFixed(3) + unit;
         } else if (unit === ' cents') {
             element.textContent = value + unit;
         } else if (unit === ' Hz') {
+            element.textContent = value + unit;
+        } else if (unit === ' st') {
+            element.textContent = value + unit;
+        } else if (unit === '%') {
             element.textContent = value + unit;
         } else {
             element.textContent = value.toFixed(1);

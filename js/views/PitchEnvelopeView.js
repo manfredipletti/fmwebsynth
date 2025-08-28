@@ -201,4 +201,37 @@ export class PitchEnvelopeView {
         const normalizedValue = Math.log(clampedTime / minTime) / Math.log(maxTime / minTime);
         return Math.round(normalizedValue * 1000);
     }
+
+    updateAllControls(model) {
+        if (!model) return;
+
+
+        if (this.amountSlider) {
+            this.amountSlider.value = model.getAmount();
+        }
+        if (this.attackSlider) {
+            this.attackSlider.value = this.timeToAttackDecaySlider(model.getAttack());
+        }
+        if (this.decaySlider) {
+            this.decaySlider.value = this.timeToAttackDecaySlider(model.getDecay());
+        }
+        if (this.sustainSlider) {
+            this.sustainSlider.value = model.getSustain();
+        }
+        if (this.releaseSlider) {
+            this.releaseSlider.value = this.timeToReleaseSlider(model.getRelease());
+        }
+
+   
+        this.updateAmountDisplay();
+        this.updateAttackDisplay();
+        this.updateDecayDisplay();
+        this.updateSustainDisplay();
+        this.updateReleaseDisplay();
+
+  
+        if (this.enableToggle) {
+            this.enableToggle.checked = model.getIsEnabled();
+        }
+    }
 }
