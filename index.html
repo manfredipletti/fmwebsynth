@@ -15,6 +15,28 @@
         </header>
         
         <main class="synth-main">
+            <div class="preset-section">
+                <h2 class="section-title">PRESET</h2>
+                <div class="preset-controls">
+                    <div class="preset-selector">
+                        <label for="preset-select">Preset:</label>
+                        <select id="preset-select">
+                            <option value="">-- Seleziona Preset --</option>
+                            <option value="classic">Classic FM</option>
+                            <option value="bass">Bass FM</option>
+                            <option value="pad">Pad FM</option>
+                            <option value="lead">Lead FM</option>
+                            <option value="pluck">Pluck FM</option>
+                        </select>
+                    </div>
+                    <div class="preset-actions">
+                        <button id="export-preset" class="btn btn-secondary">Export Preset</button>
+                        <button id="import-preset" class="btn btn-secondary">Import Preset</button>
+                        <input type="file" id="preset-file-input" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            
             <div class="oscillators-section">
                 <h2 class="section-title">OSCILLATORS</h2>
                 <div class="oscillators-tabs" id="oscillators-tabs">
