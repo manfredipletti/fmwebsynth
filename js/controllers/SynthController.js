@@ -502,6 +502,10 @@ export class SynthController {
         return this.filterModel ? this.filterModel.getSettings() : null;
     }
 
+    getDelaySettings() {
+        return this.delayModel ? this.delayModel.getSettings() : null;
+    }
+
     getMeterLevel() {
         if (this.masterMeter) {
 

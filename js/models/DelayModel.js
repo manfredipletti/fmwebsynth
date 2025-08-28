@@ -7,7 +7,7 @@ export class DelayModel {
     }
 
     setDelayTime(time) {
-        this.delayTime = Math.max(0.1, Math.min(2, time));
+        this.delayTime = Math.max(0, Math.min(1, time));
         return this.delayTime;
     }
 
@@ -30,4 +30,13 @@ export class DelayModel {
     getFeedback() { return this.feedback; }
     getWet() { return this.wet; }
     getIsEnabled() { return this.isEnabled; }
+
+    getSettings() {
+        return {
+            delayTime: this.delayTime,
+            feedback: this.feedback,
+            wet: this.wet,
+            isEnabled: this.isEnabled
+        };
+    }
 }

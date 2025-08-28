@@ -46,18 +46,18 @@ export class DelayView {
 
 
     sliderToTime(sliderValue) {
-        const minTime = 0.1;
-        const maxTime = 2;
-        const normalizedValue = sliderValue / 1000; // slider 0-1000 -> 0-1
-        const time = minTime * Math.pow(maxTime / minTime, normalizedValue);
+        const minTime = 0;
+        const maxTime = 1;
+        const normalizedValue = sliderValue / 1000; 
+        const time = minTime + (maxTime - minTime) * normalizedValue;
         return time;
     }
 
     timeToSlider(time) {
-        const minTime = 0.1;
-        const maxTime = 2;
+        const minTime = 0;
+        const maxTime = 1;
         const clampedTime = Math.max(minTime, Math.min(maxTime, time));
-        const normalizedValue = Math.log(clampedTime / minTime) / Math.log(maxTime / minTime);
+        const normalizedValue = (clampedTime - minTime) / (maxTime - minTime);
         return Math.round(normalizedValue * 1000);
     }
 
