@@ -332,7 +332,6 @@ function initEnvelopeTabs() {
         return;
     }
     
-    // Set PITCH ENV as default active tab
     const pitchTab = document.querySelector('[data-envelope="pitch"]');
     const pitchPanel = document.querySelector('[data-envelope="pitch"].envelope-panel');
     if (pitchTab && pitchPanel) {
@@ -414,3 +413,25 @@ function updateEnvelopeDisplay(elementId, value, unit) {
         }
     }
 }
+
+// Initialize MIDI channel selector
+function initMIDIChannelSelector() {
+    const channelSelect = document.getElementById('midi-channel');
+    if (channelSelect && window.synthController) {
+        // Initialize selected channel property if not exists
+        if (!window.synthController.selectedChannel) {
+            window.synthController.selectedChannel = 1;
+        }
+        
+        channelSelect.value = window.synthController.selectedChannel;
+        channelSelect.addEventListener('change', (e) => {
+            window.synthController.selectedChannel = parseInt(e.target.value);
+            console.log(`MIDI Channel changed to: ${window.synthController.selectedChannel}`);
+        });
+    }
+}
+
+
+setTimeout(() => {
+    initMIDIChannelSelector();
+}, 200);

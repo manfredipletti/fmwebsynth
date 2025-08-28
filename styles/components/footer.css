@@ -11,6 +11,13 @@
     gap: var(--spacing-md);
 }
 
+.midi-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: flex-start;
+}
+
 .midi-status {
     color: var(--neon-yellow);
     font-weight: bold;
@@ -18,16 +25,52 @@
     letter-spacing: var(--letter-spacing-1);
 }
 
+.midi-channel-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.midi-channel-selector label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.midi-channel-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.midi-channel-select:hover {
+    border-color: var(--neon-yellow);
+}
+
+.midi-channel-select:focus {
+    outline: none;
+    border-color: var(--neon-yellow);
+    box-shadow: 0 0 0 2px rgba(255, 255, 0, 0.2);
+}
+
 .synth-info {
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
-
 
 @media (max-width: 768px) {
     .synth-footer {
         flex-direction: column;
         text-align: center;
         margin-top: var(--spacing-xxl);
+    }
+    
+    .midi-section {
+        align-items: center;
     }
 } 

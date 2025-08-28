@@ -135,8 +135,14 @@ export class SynthController {
 
     onMIDIMessage(event) {
         const command = event.data[0];
+        const channel = (command & 0x0F) + 1; 
         const note = event.data[1];
         const velocity = event.data[2];
+
+        
+        if (channel !== this.selectedChannel) {
+            return;
+        }
 
         switch (command & 0xF0) {
             case 0x90: 
