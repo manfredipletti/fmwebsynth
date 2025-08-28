@@ -44,4 +44,15 @@ export class FilterEnvelopeModel {
     getRelease() { return this.release; }
     getAmount() { return this.amount; }
     getIsEnabled() { return this.isEnabled; }
+
+    getSettings() {
+        return {
+            enabled: this.isEnabled,
+            amount: this.amount,
+            attack: this.attack,
+            decay: this.decay,
+            sustain: this.sustain,
+            release: this.release
+        };
+    }
 }

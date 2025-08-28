@@ -49,12 +49,12 @@ export class PitchEnvelopeModel {
     
     getSettings() {
         return {
+            enabled: this.isEnabled,
+            amount: this.amount,
             attack: this.attack,
             decay: this.decay,
             sustain: this.sustain,
-            release: this.release,
-            amount: this.amount,
-            isEnabled: this.isEnabled
+            release: this.release
         };
     }
     

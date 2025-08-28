@@ -134,4 +134,17 @@ export class OscillatorModel {
         this.voices.clear();
     }
 
+    getSettings() {
+        return {
+            enabled: this.isActive,
+            waveform: this.waveform,
+            ratio: this.ratio,
+            attack: this.attack,
+            decay: this.decay,
+            sustain: this.sustain,
+            release: this.release,
+            phase: this.phase
+        };
+    }
+
 }
