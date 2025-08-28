@@ -73,7 +73,7 @@ export class OscillatorView {
                         <span class="control-value" data-display="attack">${this.getModel().attack.toFixed(3)}s</span>
                     </div>
                     <input type="range" class="control-input" data-control="attack" 
-                           value="${this.getModel().attack * 1000}" min="0" max="2000" step="1">
+                           value="${this.timeToAttackDecaySlider(this.getModel().attack)}" min="0" max="1000" step="1">
                 </div>
                 
                 <div class="control-group">
@@ -82,7 +82,7 @@ export class OscillatorView {
                         <span class="control-value" data-display="decay">${this.getModel().decay.toFixed(3)}s</span>
                     </div>
                     <input type="range" class="control-input" data-control="decay" 
-                           value="${this.getModel().decay * 1000}" min="1" max="2000" step="1">
+                           value="${this.timeToAttackDecaySlider(this.getModel().decay)}" min="0" max="1000" step="1">
                 </div>
                 
                 <div class="control-group">
@@ -100,7 +100,7 @@ export class OscillatorView {
                         <span class="control-value" data-display="release">${this.getModel().release.toFixed(3)}s</span>
                     </div>
                     <input type="range" class="control-input" data-control="release" 
-                           value="${this.getModel().release * 1000}" min="1" max="2000" step="1">
+                           value="${this.timeToReleaseSlider(this.getModel().release)}" min="0" max="1000" step="1">
                 </div>
                 
                 <div class="control-group">
@@ -164,13 +164,13 @@ export class OscillatorView {
         
         const attackInput = this.panelElement.querySelector('[data-control="attack"]');
         if (attackInput) {
-            attackInput.value = Math.round(this.getModel().attack * 1000);
+            attackInput.value = this.timeToAttackDecaySlider(this.getModel().attack);
             this.updateAttackDisplay(this.getModel().attack);
         }
         
         const decayInput = this.panelElement.querySelector('[data-control="decay"]');
         if (decayInput) {
-            decayInput.value = Math.round(this.getModel().decay * 1000);
+            decayInput.value = this.timeToAttackDecaySlider(this.getModel().decay);
             this.updateDecayDisplay(this.getModel().decay);
         }
         
@@ -182,7 +182,7 @@ export class OscillatorView {
         
         const releaseInput = this.panelElement.querySelector('[data-control="release"]');
         if (releaseInput) {
-            releaseInput.value = Math.round(this.getModel().release * 1000);
+            releaseInput.value = this.timeToReleaseSlider(this.getModel().release);
             this.updateReleaseDisplay(this.getModel().release);
         }
 
@@ -287,7 +287,8 @@ export class OscillatorView {
         const attackInput = panelElement.querySelector('[data-control="attack"]');
         if (attackInput) {
             attackInput.addEventListener('input', (e) => {
-                const value = parseFloat(e.target.value) / 1000; 
+                const sliderValue = parseFloat(e.target.value);
+                const value = this.sliderToAttackDecayTime(sliderValue);
                 this.controller.setAttack(this.modelId, value);
                 this.updateAttackDisplay(value);
             });
@@ -296,7 +297,8 @@ export class OscillatorView {
         const decayInput = panelElement.querySelector('[data-control="decay"]');
         if (decayInput) {
             decayInput.addEventListener('input', (e) => {
-                const value = parseFloat(e.target.value) / 1000; 
+                const sliderValue = parseFloat(e.target.value);
+                const value = this.sliderToAttackDecayTime(sliderValue);
                 this.controller.setDecay(this.modelId, value);
                 this.updateDecayDisplay(value);
             });
@@ -314,7 +316,8 @@ export class OscillatorView {
         const releaseInput = panelElement.querySelector('[data-control="release"]');
         if (releaseInput) {
             releaseInput.addEventListener('input', (e) => {
-                const value = parseFloat(e.target.value) / 1000; 
+                const sliderValue = parseFloat(e.target.value);
+                const value = this.sliderToReleaseTime(sliderValue);
                 this.controller.setRelease(this.modelId, value);
                 this.updateReleaseDisplay(value);
             });
@@ -329,4 +332,40 @@ export class OscillatorView {
             });
         }
     }
+
+    sliderToAttackDecayTime(sliderValue) {
+        const minTime = 0.001; 
+        const maxTime = 2;   
+        const normalizedValue = sliderValue / 1000; 
+        const time = minTime * Math.pow(maxTime / minTime, normalizedValue);
+        return time;
+    }
+
+    timeToAttackDecaySlider(time) {
+
+        const minTime = 0.001;
+        const maxTime = 2;
+        const clampedTime = Math.max(minTime, Math.min(maxTime, time));
+        const normalizedValue = Math.log(clampedTime / minTime) / Math.log(maxTime / minTime);
+        return Math.round(normalizedValue * 1000);
+    }   
+
+    sliderToReleaseTime(sliderValue) {
+
+        const minTime = 0.001; 
+        const maxTime = 5;   
+        const normalizedValue = sliderValue / 1000; 
+        const time = minTime * Math.pow(maxTime / minTime, normalizedValue);
+        return time;
+    }
+
+    timeToReleaseSlider(time) {
+
+        const minTime = 0.001;
+        const maxTime = 5;
+        const clampedTime = Math.max(minTime, Math.min(maxTime, time));
+        const normalizedValue = Math.log(clampedTime / minTime) / Math.log(maxTime / minTime);
+        return Math.round(normalizedValue * 1000);
+    }
+
 }

@@ -23,7 +23,7 @@ export class PitchEnvelopeModel {
     }
     
     setDecay(decay) {
-        this.decay = Math.max(0.01, Math.min(10, decay));
+        this.decay = Math.max(0.001, Math.min(10, decay));
         console.log(`Pitch envelope decay set to: ${this.decay}s`);
     }
     
@@ -33,7 +33,7 @@ export class PitchEnvelopeModel {
     }
     
     setRelease(release) {
-        this.release = Math.max(0.01, Math.min(10, release));
+        this.release = Math.max(0, Math.min(5, release));
         console.log(`Pitch envelope release set to: ${this.release}s`);
     }
     

@@ -145,20 +145,27 @@ export class SynthController {
                         const modulationGain = new this.Tone.Gain(modulationValue * 100);
                         modulatorEnvelope.connect(modulationGain);
                         modulationGain.connect(carrierOsc.frequency);
-                                         } else {
-                         const selfModulationOsc = new this.Tone.Oscillator(carrierOsc.frequency.value, carrierOsc.waveform);
-                         selfModulationOsc.phase = carrier.getInitialPhase();
-                        const selfModulationEnvelope = new this.Tone.AmplitudeEnvelope({
-                            attack: carrier.voices.get(note).envelope.attack,
-                            decay: carrier.voices.get(note).envelope.decay,
-                            sustain: carrier.voices.get(note).envelope.sustain,
-                            release: carrier.voices.get(note).envelope.release
-                        });
-                        const selfModulationGain = new this.Tone.Gain(modulationValue * 100);
-                        selfModulationOsc.connect(selfModulationEnvelope);
-                        selfModulationEnvelope.connect(selfModulationGain);
-                        selfModulationGain.connect(carrierOsc.frequency);
-                        carrier.addSelfModulation(note, selfModulationOsc, selfModulationEnvelope, selfModulationGain);
+                                         } 
+                                         else {
+                        const delay = new this.Tone.Delay(0.0001);
+                        const modulationGain = new this.Tone.Gain(modulationValue * 100);
+                        carrierOsc.connect(delay);
+                        delay.connect(modulationGain);
+                        modulationGain.connect(carrierOsc.frequency);
+                        carrier.addSelfModulation(note, delay, modulationGain);
+                        //  const selfModulationOsc = new this.Tone.Oscillator(carrierOsc.frequency.value, carrierOsc.waveform);
+                        //  selfModulationOsc.phase = carrier.getInitialPhase();
+                        // const selfModulationEnvelope = new this.Tone.AmplitudeEnvelope({
+                        //     attack: carrier.voices.get(note).envelope.attack,
+                        //     decay: carrier.voices.get(note).envelope.decay,
+                        //     sustain: carrier.voices.get(note).envelope.sustain,
+                        //     release: carrier.voices.get(note).envelope.release
+                        // });
+                        // const selfModulationGain = new this.Tone.Gain(modulationValue * 100);
+                        // selfModulationOsc.connect(selfModulationEnvelope);
+                        // selfModulationEnvelope.connect(selfModulationGain);
+                        // selfModulationGain.connect(carrierOsc.frequency);
+                        // carrier.addSelfModulation(note, selfModulationOsc, selfModulationEnvelope, selfModulationGain);
                     }    
                     console.log(`FM Connection: OSC ${modulatorId} -> OSC ${carrierId} (${modulationValue}%)`);
                 }
@@ -290,7 +297,7 @@ export class SynthController {
 
     setDecay(id, decay) {
         const oscillator = this.getOscillator(id);
-        if (oscillator && decay >= 0.001 && decay <= 2.0) {
+
             oscillator.decay = decay;
             
             const oscillatorView = this.oscillatorViews[id];
@@ -299,7 +306,7 @@ export class SynthController {
             }
             
             console.log(`Oscillator ${id} decay changed to: ${decay}s`);
-        }
+
     }
 
     setSustain(id, sustain) {
@@ -318,7 +325,6 @@ export class SynthController {
 
     setRelease(id, release) {
         const oscillator = this.getOscillator(id);
-        if (oscillator && release >= 0.001 && release <= 2.0) {
             oscillator.release = release;
             
             const oscillatorView = this.oscillatorViews[id];
@@ -327,7 +333,6 @@ export class SynthController {
             }
             
             console.log(`Oscillator ${id} release changed to: ${release}s`);
-        }
     }
 
     setPhase(id, phase) {
@@ -504,10 +509,6 @@ export class SynthController {
                         }
                         
                  
-                        if (osc.selfModulations.has(note)) {
-                            osc.selfModulations.get(note).selfModulationOsc.start();
-                            osc.selfModulations.get(note).selfModulationEnvelope.triggerAttack();
-                        }
                     }
                 }
             }

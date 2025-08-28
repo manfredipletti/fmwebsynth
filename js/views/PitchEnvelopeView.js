@@ -42,7 +42,8 @@ export class PitchEnvelopeView {
         
         if (this.attackSlider) {
             this.attackSlider.addEventListener('input', (e) => {
-                const attack = parseFloat(e.target.value);
+                const sliderValue = parseFloat(e.target.value);
+                const attack = this.sliderToAttackDecayTime(sliderValue);
                 this.model.setAttack(attack);
                 this.updateAttackDisplay();
             });
@@ -50,7 +51,8 @@ export class PitchEnvelopeView {
         
         if (this.decaySlider) {
             this.decaySlider.addEventListener('input', (e) => {
-                const decay = parseFloat(e.target.value);
+                const sliderValue = parseFloat(e.target.value);
+                const decay = this.sliderToAttackDecayTime(sliderValue);
                 this.model.setDecay(decay);
                 this.updateDecayDisplay();
             });
@@ -66,7 +68,8 @@ export class PitchEnvelopeView {
         
         if (this.releaseSlider) {
             this.releaseSlider.addEventListener('input', (e) => {
-                const release = parseFloat(e.target.value);
+                const sliderValue = parseFloat(e.target.value);
+                const release = this.sliderToReleaseTime(sliderValue);
                 this.model.setRelease(release);
                 this.updateReleaseDisplay();
             });
@@ -98,16 +101,16 @@ export class PitchEnvelopeView {
     updateAttackDisplay() {
         if (this.attackSlider && this.attackValue) {
             const attack = this.model.getAttack();
-            this.attackSlider.value = attack;
-            this.attackValue.textContent = `${attack.toFixed(1)}s`;
+            this.attackSlider.value = this.timeToAttackDecaySlider(attack);
+            this.attackValue.textContent = `${attack.toFixed(3)}s`;
         }
     }
     
     updateDecayDisplay() {
         if (this.decaySlider && this.decayValue) {
             const decay = this.model.getDecay();
-            this.decaySlider.value = decay;
-            this.decayValue.textContent = `${decay.toFixed(1)}s`;
+            this.decaySlider.value = this.timeToAttackDecaySlider(decay);
+            this.decayValue.textContent = `${decay.toFixed(3)}s`;
         }
     }
     
@@ -122,8 +125,8 @@ export class PitchEnvelopeView {
     updateReleaseDisplay() {
         if (this.releaseSlider && this.releaseValue) {
             const release = this.model.getRelease();
-            this.releaseSlider.value = release;
-            this.releaseValue.textContent = `${release.toFixed(1)}s`;
+            this.releaseSlider.value = this.timeToReleaseSlider(release);
+            this.releaseValue.textContent = `${release.toFixed(3)}s`;
         }
     }
     
@@ -163,5 +166,39 @@ export class PitchEnvelopeView {
     applySettings(settings) {
         this.model.applySettings(settings);
         this.updateDisplay();
+    }
+
+    // Logarithmic conversion for attack/decay sliders (0-2s)
+    sliderToAttackDecayTime(sliderValue) {
+        const minTime = 0.001; // 1ms
+        const maxTime = 2;     // 2s
+        const normalizedValue = sliderValue / 1000; // slider 0-1000 -> 0-1
+        const time = minTime * Math.pow(maxTime / minTime, normalizedValue);
+        return time;
+    }
+    
+    timeToAttackDecaySlider(time) {
+        const minTime = 0.001;
+        const maxTime = 2;
+        const clampedTime = Math.max(minTime, Math.min(maxTime, time));
+        const normalizedValue = Math.log(clampedTime / minTime) / Math.log(maxTime / minTime);
+        return Math.round(normalizedValue * 1000);
+    }
+
+    // Logarithmic conversion for release slider (0-5s)
+    sliderToReleaseTime(sliderValue) {
+        const minTime = 0.001; // 1ms
+        const maxTime = 5;     // 5s
+        const normalizedValue = sliderValue / 1000; // slider 0-1000 -> 0-1
+        const time = minTime * Math.pow(maxTime / minTime, normalizedValue);
+        return time;
+    }
+    
+    timeToReleaseSlider(time) {
+        const minTime = 0.001;
+        const maxTime = 5;
+        const clampedTime = Math.max(minTime, Math.min(maxTime, time));
+        const normalizedValue = Math.log(clampedTime / minTime) / Math.log(maxTime / minTime);
+        return Math.round(normalizedValue * 1000);
     }
 }

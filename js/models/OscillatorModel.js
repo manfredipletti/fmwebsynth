@@ -35,33 +35,25 @@ export class OscillatorModel {
 
     }
 
-    addSelfModulation(note, selfModulationOsc, selfModulationEnvelope, selfModulationGain) {
+    addSelfModulation(note, delay, selfModulationGain) {
         if (this.selfModulations.size >= this.maxVoices) {
             const oldestNote = this.selfModulations.keys().next().value;
             this.removeSelfModulation(oldestNote);
         }
-        this.selfModulations.set(note, {selfModulationOsc, selfModulationEnvelope, selfModulationGain});
+        this.selfModulations.set(note, {delay, selfModulationGain});
     }
 
     removeSelfModulation(note) {
         const selfModulation = this.selfModulations.get(note);
         if (selfModulation) {
-            selfModulation.envelope.triggerRelease();
-            const releaseTime = selfModulation.envelope.release;
-            setTimeout(() => {
-                this.disposeSelfModulation(selfModulation);
-            }, releaseTime * 1000 + 100);
+            this.disposeSelfModulation(selfModulation);
             this.selfModulations.delete(note);
         }
     }
 
     disposeSelfModulation(selfModulation) {
-        if (selfModulation.selfModulationOsc) {
-            selfModulation.selfModulationOsc.stop();
-            selfModulation.selfModulationOsc.dispose();
-        }
-        if (selfModulation.selfModulationEnvelope) {
-            selfModulation.selfModulationEnvelope.dispose();
+        if (selfModulation.delay) {
+            selfModulation.delay.dispose();
         }
         if (selfModulation.selfModulationGain) {
             selfModulation.selfModulationGain.dispose();
