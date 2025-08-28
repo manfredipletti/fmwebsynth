@@ -13,6 +13,8 @@ import { DelayModel } from '../models/DelayModel.js';
 import { DelayView } from '../views/DelayView.js';
 import { ReverbModel } from '../models/ReverbModel.js';
 import { ReverbView } from '../views/ReverbView.js';
+import { CompressorModel } from '../models/CompressorModel.js';
+import { CompressorView } from '../views/CompressorView.js';
 
 export class SynthController {
     constructor() {
@@ -31,12 +33,18 @@ export class SynthController {
         this.reverbModel = null;
         this.reverbView = null;
         this.globalReverb = null;
+        this.compressorModel = null;
+        this.compressorView = null;
+        this.globalCompressor = null;
+        this.compressorUpdateTimeout = null;
         this.isInitialized = false;
         this.masterVolume = 0.7; 
         this.delayInputNode = null; 
         this.delayOutputNode = null;
         this.reverbInputNode = null;
         this.reverbOutputNode = null;
+        this.compressorInputNode = null;
+        this.compressorOutputNode = null;
         this.masterGainNode = null;
         this.masterMeter = null;
         this.init();
@@ -94,6 +102,9 @@ export class SynthController {
         this.reverbModel = new ReverbModel();
         this.reverbView = new ReverbView(this);
         
+        this.compressorModel = new CompressorModel();
+        this.compressorView = new CompressorView(this);
+        
         this.globalDelay = new this.Tone.FeedbackDelay({
             delayTime: this.delayModel.getDelayTime(),
             feedback: this.delayModel.getFeedback(),
@@ -104,6 +115,13 @@ export class SynthController {
             decay: this.reverbModel.getDecay(),
             preDelay: this.reverbModel.getPredelay(),
             wet: this.reverbModel.getDryWet()
+        });
+
+        this.globalCompressor = new this.Tone.Compressor({
+            threshold: this.compressorModel.getThreshold(),
+            attack: this.compressorModel.getAttack(),
+            release: this.compressorModel.getRelease(),
+            ratio: this.compressorModel.getRatio()
         });
         
         console.log('Filter model and view initialized');
@@ -232,13 +250,17 @@ export class SynthController {
             this.delayOutputNode = new this.Tone.Gain(1);
             this.reverbInputNode = new this.Tone.Gain(1);
             this.reverbOutputNode = new this.Tone.Gain(1);
+            this.compressorInputNode = new this.Tone.Gain(1);
+            this.compressorOutputNode = new this.Tone.Gain(1);
             this.masterGainNode = new this.Tone.Gain(this.masterVolume * 0.1);
             this.masterMeter = new this.Tone.Meter();
             
             this.delayInputNode.connect(this.delayOutputNode);
             this.delayOutputNode.connect(this.reverbInputNode);
             this.reverbInputNode.connect(this.reverbOutputNode);
-            this.reverbOutputNode.connect(this.masterGainNode);
+            this.reverbOutputNode.connect(this.compressorInputNode);
+            this.compressorInputNode.connect(this.compressorOutputNode);
+            this.compressorOutputNode.connect(this.masterGainNode);
             this.masterGainNode.connect(this.masterMeter);
             this.masterGainNode.connect(this.Tone.context.destination);
             
@@ -563,6 +585,137 @@ export class SynthController {
 
     getReverbSettings() {
         return this.reverbModel ? this.reverbModel.getSettings() : null;
+    }
+
+    setCompressorThreshold(threshold) {
+        if (this.compressorModel) {
+            const clampedThreshold = this.compressorModel.setThreshold(threshold);
+            this.scheduleCompressorUpdate();
+            console.log(`Compressor threshold changed to: ${clampedThreshold}dB`);
+        }
+    }
+
+    setCompressorAttack(attack) {
+        if (this.compressorModel) {
+            const clampedAttack = this.compressorModel.setAttack(attack);
+            this.scheduleCompressorUpdate();
+            console.log(`Compressor attack changed to: ${clampedAttack}s`);
+        }
+    }
+
+    setCompressorRelease(release) {
+        if (this.compressorModel) {
+            const clampedRelease = this.compressorModel.setRelease(release);
+            this.scheduleCompressorUpdate();
+            console.log(`Compressor release changed to: ${clampedRelease}s`);
+        }
+    }
+
+    setCompressorRatio(ratio) {
+        if (this.compressorModel) {
+            const clampedRatio = this.compressorModel.setRatio(ratio);
+            this.scheduleCompressorUpdate();
+            console.log(`Compressor ratio changed to: ${clampedRatio}:1`);
+        }
+    }
+
+    setCompressorEnabled(enabled) {
+        if (this.compressorModel && this.globalCompressor) {
+            this.compressorModel.setIsEnabled(enabled);
+            
+            if (enabled) {
+                this.compressorInputNode.disconnect();
+                this.compressorInputNode.connect(this.globalCompressor);
+                this.globalCompressor.connect(this.compressorOutputNode);
+            } else {
+                this.compressorInputNode.disconnect();
+                this.compressorInputNode.connect(this.compressorOutputNode);
+            }
+            
+            console.log(`Compressor ${enabled ? 'enabled' : 'disabled'}`);
+        }
+    }
+
+    getCompressorSettings() {
+        return this.compressorModel ? this.compressorModel.getSettings() : null;
+    }
+
+    updateCompressorReduction() {
+        if (this.globalCompressor && this.compressorView && this.compressorModel.getIsEnabled()) {
+            try {
+                const reductionDb = this.globalCompressor.reduction;
+                
+                if (reductionDb !== undefined && !isNaN(reductionDb)) {
+                    const normalizedReduction = Math.max(0, Math.min(1, Math.abs(reductionDb) / 60));
+                    
+                    this.compressorModel.setReduction(normalizedReduction);
+                    this.compressorView.updateReductionMeter(normalizedReduction);
+                }
+            } catch (error) {
+                console.warn('Error reading compressor reduction:', error);
+            }
+        } else if (this.compressorView && !this.compressorModel.getIsEnabled()) {
+            this.compressorModel.setReduction(0);
+            this.compressorView.updateReductionMeter(0);
+        }
+    }
+
+    scheduleCompressorUpdate() {
+        if (this.compressorUpdateTimeout) {
+            clearTimeout(this.compressorUpdateTimeout);
+        }
+        
+        this.compressorUpdateTimeout = setTimeout(() => {
+            this.recreateCompressor();
+        }, 100);
+    }
+
+    recreateCompressor() {
+        if (!this.compressorModel || !this.Tone) return;
+
+        const wasEnabled = this.compressorModel.getIsEnabled();
+        let inputConnection = null;
+        let outputConnection = null;
+
+        if (this.globalCompressor) {
+            if (wasEnabled) {
+                inputConnection = this.compressorInputNode.connections;
+                outputConnection = this.globalCompressor.connections;
+            }
+            
+            this.globalCompressor.dispose();
+        }
+        this.globalCompressor = new this.Tone.Compressor({
+            threshold: this.compressorModel.getThreshold(),
+            attack: this.compressorModel.getAttack(),
+            release: this.compressorModel.getRelease(),
+            ratio: this.compressorModel.getRatio()
+        });
+
+        if (wasEnabled) {
+            this.compressorInputNode.disconnect();
+            this.compressorInputNode.connect(this.globalCompressor);
+            this.globalCompressor.connect(this.compressorOutputNode);
+        }
+
+        console.log('Compressor recreated with new settings');
+    }
+
+    cleanup() {
+        if (this.compressorUpdateTimeout) {
+            clearTimeout(this.compressorUpdateTimeout);
+            this.compressorUpdateTimeout = null;
+        }
+        
+        if (this.globalCompressor) {
+            this.globalCompressor.dispose();
+        }
+        if (this.globalReverb) {
+            this.globalReverb.dispose();
+        }
+        if (this.globalDelay) {
+            this.globalDelay.dispose();
+        }
     }
 
     getMeterLevel() {

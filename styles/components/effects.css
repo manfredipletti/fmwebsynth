@@ -12,6 +12,7 @@
     flex-direction: row;
     gap: 20px;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .effect-item {
@@ -98,6 +99,28 @@
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
 }
 
+.compressor-meter {
+    width: 100%;
+    height: 20px;
+    background: var(--darker-bg);
+    border: 1px solid var(--neon-blue);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.compressor-meter-bar {
+    height: 100%;
+    width: 0%;
+    background: #00ff00;
+    transition: width 0.05s ease-out, background-color 0.1s ease;
+    border-radius: 2px;
+    box-shadow: 0 0 5px currentColor;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 
 @media (max-width: 768px) {
     .effects-section {
@@ -107,6 +130,7 @@
     
     .effect-item {
         padding: 12px;
+        min-width: 100%;
     }
     
     .effect-controls {

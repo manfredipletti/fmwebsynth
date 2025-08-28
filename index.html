@@ -420,6 +420,66 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="effect-item">
+                        <div class="effect-header">
+                            <div class="effect-enable">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="compressor-enable">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="effect-label">COMPRESSOR</span>
+                            </div>
+                        </div>
+                        
+                        <div class="effect-controls">
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">THRESHOLD</label>
+                                    <span class="control-value" id="compressor-threshold-value">-20.0dB</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="compressor-threshold" 
+                                       min="0" max="1000" value="800" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">ATTACK</label>
+                                    <span class="control-value" id="compressor-attack-value">0.003s</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="compressor-attack" 
+                                       min="0" max="1000" value="3" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">RELEASE</label>
+                                    <span class="control-value" id="compressor-release-value">0.250s</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="compressor-release" 
+                                       min="0" max="1000" value="250" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">RATIO</label>
+                                    <span class="control-value" id="compressor-ratio-value">4.0:1</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="compressor-ratio" 
+                                       min="0" max="1000" value="158" step="1">
+                            </div>
+
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">REDUCTION</label>
+                                    <span class="control-value" id="compressor-reduction-value">0.0dB</span>
+                                </div>
+                                <div class="compressor-meter">
+                                    <div class="compressor-meter-bar" id="compressor-reduction-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

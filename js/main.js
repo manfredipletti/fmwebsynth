@@ -25,8 +25,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (window.synthController.reverbView) {
                     window.synthController.reverbView.updateAllControls(window.synthController.reverbModel);
                 }
+                if (window.synthController.compressorView) {
+                    window.synthController.compressorView.updateAllControls(window.synthController.compressorModel);
+                }
             }
         }, 100);
+
+        
+        setInterval(() => {
+            if (window.synthController && window.synthController.updateCompressorReduction) {
+                window.synthController.updateCompressorReduction();
+            }
+        }, 16);
 
         
         console.log('FM Web Synth - Ready!');
@@ -353,6 +363,10 @@ function initEnvelopeTabs() {
                 
                 if (window.synthController && window.synthController.reverbView) {
                     window.synthController.reverbView.updateAllControls(window.synthController.reverbModel);
+                }
+                
+                if (window.synthController && window.synthController.compressorView) {
+                    window.synthController.compressorView.updateAllControls(window.synthController.compressorModel);
                 }
             }
             
