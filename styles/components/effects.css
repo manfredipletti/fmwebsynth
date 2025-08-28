@@ -10,9 +10,10 @@
 .effects-controls {
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    justify-content: space-between;
+    gap: 30px;
+    justify-content: space-evenly;
     flex-wrap: wrap;
+    align-items: flex-start;
 }
 
 .effect-item {
@@ -56,6 +57,35 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.control-label {
+    color: var(--neon-blue);
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.control-value {
+    color: var(--neon-blue);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    background: var(--darker-bg);
+    border: 1px solid var(--neon-blue);
+    border-radius: 4px;
+    padding: 4px 8px;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
 }
 
 .effect-slider {
@@ -128,13 +158,14 @@
         margin: 15px 0;
     }
     
+    .effect-controls {
+        gap: 20px;
+        justify-content: center;
+        flex-direction: column;
+    }
+    
     .effect-item {
         padding: 12px;
         min-width: 100%;
-    }
-    
-    .effect-controls {
-        gap: 12px;
-        flex-direction: column;
     }
 }
