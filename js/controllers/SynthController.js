@@ -11,6 +11,8 @@ import { FilterEnvelopeModel } from '../models/FilterEnvelopeModel.js';
 import { FilterEnvelopeView } from '../views/FilterEnvelopeView.js';
 import { DelayModel } from '../models/DelayModel.js';
 import { DelayView } from '../views/DelayView.js';
+import { ReverbModel } from '../models/ReverbModel.js';
+import { ReverbView } from '../views/ReverbView.js';
 
 export class SynthController {
     constructor() {
@@ -26,10 +28,15 @@ export class SynthController {
         this.delayModel = null;
         this.delayView = null;
         this.globalDelay = null;
+        this.reverbModel = null;
+        this.reverbView = null;
+        this.globalReverb = null;
         this.isInitialized = false;
         this.masterVolume = 0.7; 
         this.delayInputNode = null; 
         this.delayOutputNode = null;
+        this.reverbInputNode = null;
+        this.reverbOutputNode = null;
         this.masterGainNode = null;
         this.masterMeter = null;
         this.init();
@@ -84,14 +91,20 @@ export class SynthController {
         this.delayModel = new DelayModel();
         this.delayView = new DelayView(this);
         
-    
+        this.reverbModel = new ReverbModel();
+        this.reverbView = new ReverbView(this);
+        
         this.globalDelay = new this.Tone.FeedbackDelay({
             delayTime: this.delayModel.getDelayTime(),
             feedback: this.delayModel.getFeedback(),
             wet: this.delayModel.getWet()
         });
-        
 
+        this.globalReverb = new this.Tone.Reverb({
+            decay: this.reverbModel.getDecay(),
+            preDelay: this.reverbModel.getPredelay(),
+            wet: this.reverbModel.getDryWet()
+        });
         
         console.log('Filter model and view initialized');
     }
@@ -217,11 +230,15 @@ export class SynthController {
             this.Tone = Tone;
             this.delayInputNode = new this.Tone.Gain(1);
             this.delayOutputNode = new this.Tone.Gain(1);
+            this.reverbInputNode = new this.Tone.Gain(1);
+            this.reverbOutputNode = new this.Tone.Gain(1);
             this.masterGainNode = new this.Tone.Gain(this.masterVolume * 0.1);
             this.masterMeter = new this.Tone.Meter();
             
             this.delayInputNode.connect(this.delayOutputNode);
-            this.delayOutputNode.connect(this.masterGainNode);
+            this.delayOutputNode.connect(this.reverbInputNode);
+            this.reverbInputNode.connect(this.reverbOutputNode);
+            this.reverbOutputNode.connect(this.masterGainNode);
             this.masterGainNode.connect(this.masterMeter);
             this.masterGainNode.connect(this.Tone.context.destination);
             
@@ -483,15 +500,12 @@ export class SynthController {
             this.delayModel.setIsEnabled(enabled);
             
             if (enabled) {
-    
                 this.delayInputNode.disconnect();
                 this.delayInputNode.connect(this.globalDelay);
                 this.globalDelay.connect(this.delayOutputNode);
-
             } else {
-
                 this.delayInputNode.disconnect();
-                this.delayInputNode.connect(this.masterGainNode);
+                this.delayInputNode.connect(this.delayOutputNode);
             }
             
             console.log(`Delay ${enabled ? 'enabled' : 'disabled'}`);
@@ -504,6 +518,51 @@ export class SynthController {
 
     getDelaySettings() {
         return this.delayModel ? this.delayModel.getSettings() : null;
+    }
+
+    setReverbDecay(decay) {
+        if (this.reverbModel && this.globalReverb) {
+            const clampedDecay = this.reverbModel.setDecay(decay);
+            this.globalReverb.decay = clampedDecay;
+            console.log(`Reverb decay changed to: ${clampedDecay}s`);
+        }
+    }
+
+    setReverbPredelay(predelay) {
+        if (this.reverbModel && this.globalReverb) {
+            const clampedPredelay = this.reverbModel.setPredelay(predelay);
+            this.globalReverb.preDelay = clampedPredelay;
+            console.log(`Reverb predelay changed to: ${clampedPredelay}s`);
+        }
+    }
+
+    setReverbDryWet(dryWet) {
+        if (this.reverbModel && this.globalReverb) {
+            const clampedDryWet = this.reverbModel.setDryWet(dryWet);
+            this.globalReverb.wet.value = clampedDryWet;
+            console.log(`Reverb dry/wet changed to: ${clampedDryWet}`);
+        }
+    }
+
+    setReverbEnabled(enabled) {
+        if (this.reverbModel && this.globalReverb) {
+            this.reverbModel.setIsEnabled(enabled);
+            
+            if (enabled) {
+                this.reverbInputNode.disconnect();
+                this.reverbInputNode.connect(this.globalReverb);
+                this.globalReverb.connect(this.reverbOutputNode);
+            } else {
+                this.reverbInputNode.disconnect();
+                this.reverbInputNode.connect(this.reverbOutputNode);
+            }
+            
+            console.log(`Reverb ${enabled ? 'enabled' : 'disabled'}`);
+        }
+    }
+
+    getReverbSettings() {
+        return this.reverbModel ? this.reverbModel.getSettings() : null;
     }
 
     getMeterLevel() {

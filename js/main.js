@@ -22,6 +22,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (window.synthController.delayView) {
                     window.synthController.delayView.updateAllControls(window.synthController.delayModel);
                 }
+                if (window.synthController.reverbView) {
+                    window.synthController.reverbView.updateAllControls(window.synthController.reverbModel);
+                }
             }
         }, 100);
 
@@ -342,12 +345,14 @@ function initEnvelopeTabs() {
             const targetPanel = document.querySelector(`[data-envelope="${targetEnvelope}"].envelope-panel`);
             if (targetPanel) {
                 targetPanel.classList.add('active');
-                
-                // Update controls for the selected envelope
                 if (targetEnvelope === 'filter' && window.synthController && window.synthController.filterEnvelopeView) {
                     window.synthController.filterEnvelopeView.updateAllControls(window.synthController.filterEnvelopeModel);
                 } else if (targetEnvelope === 'pitch' && window.synthController && window.synthController.pitchEnvelopeView) {
                     window.synthController.pitchEnvelopeView.updateAllControls(window.synthController.pitchEnvelopeModel);
+                }
+                
+                if (window.synthController && window.synthController.reverbView) {
+                    window.synthController.reverbView.updateAllControls(window.synthController.reverbModel);
                 }
             }
             

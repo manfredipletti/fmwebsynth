@@ -9,8 +9,9 @@
 
 .effects-controls {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
+    justify-content: space-between;
 }
 
 .effect-item {
@@ -110,5 +111,6 @@
     
     .effect-controls {
         gap: 12px;
+        flex-direction: column;
     }
 }

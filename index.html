@@ -379,6 +379,47 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="effect-item">
+                        <div class="effect-header">
+                            <div class="effect-enable">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="reverb-enable">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="effect-label">REVERB</span>
+                            </div>
+                        </div>
+                        
+                        <div class="effect-controls">
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">DECAY</label>
+                                    <span class="control-value" id="reverb-decay-value">2.000s</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="reverb-decay" 
+                                       min="0" max="1000" value="200" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">PREDELAY</label>
+                                    <span class="control-value" id="reverb-predelay-value">0.100s</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="reverb-predelay" 
+                                       min="0" max="1000" value="100" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">DRY/WET</label>
+                                    <span class="control-value" id="reverb-dry-wet-value">30%</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="reverb-dry-wet" 
+                                       min="0" max="100" value="30" step="1">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
