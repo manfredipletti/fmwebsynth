@@ -31,9 +31,7 @@ export class OscillatorModel {
             this.removeVoice(oldestNote);
         }
 
-
-            this.voices.set(note, {toneOsc: toneOsc, envelope: envelopes, gainNode: gainNodes, filter: filter});
-
+        this.voices.set(note, {toneOsc: toneOsc, envelope: envelopes, gainNode: gainNodes, filter: filter});
     }
 
     addSelfModulation(note, delay, selfModulationGain) {
@@ -108,7 +106,7 @@ export class OscillatorModel {
                 } else {
                     voice.gainNode.dispose();
                 }
-                if (voice.filter ) {
+                if (voice.filter) {
                     voice.filter.dispose();
                 }
         } catch (error) {

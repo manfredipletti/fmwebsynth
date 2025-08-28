@@ -9,6 +9,8 @@ import { PitchEnvelopeModel } from '../models/PitchEnvelopeModel.js';
 import { PitchEnvelopeView } from '../views/PitchEnvelopeView.js';
 import { FilterEnvelopeModel } from '../models/FilterEnvelopeModel.js';
 import { FilterEnvelopeView } from '../views/FilterEnvelopeView.js';
+import { DelayModel } from '../models/DelayModel.js';
+import { DelayView } from '../views/DelayView.js';
 
 export class SynthController {
     constructor() {
@@ -21,8 +23,13 @@ export class SynthController {
         this.filterEnvelopeView = null;
         this.pitchEnvelopeModel = null;
         this.pitchEnvelopeView = null;
+        this.delayModel = null;
+        this.delayView = null;
+        this.globalDelay = null;
         this.isInitialized = false;
         this.masterVolume = 0.7; 
+        this.delayInputNode = null; 
+        this.delayOutputNode = null;
         this.masterGainNode = null;
         this.masterMeter = null;
         this.init();
@@ -73,7 +80,19 @@ export class SynthController {
         
         this.filterEnvelopeModel = new FilterEnvelopeModel();
         this.filterEnvelopeView = new FilterEnvelopeView(this);
+        
+        this.delayModel = new DelayModel();
+        this.delayView = new DelayView(this);
+        
+    
+        this.globalDelay = new this.Tone.FeedbackDelay({
+            delayTime: this.delayModel.getDelayTime(),
+            feedback: this.delayModel.getFeedback(),
+            wet: this.delayModel.getWet()
+        });
+        
 
+        
         console.log('Filter model and view initialized');
     }
 
@@ -196,10 +215,13 @@ export class SynthController {
         try {
 
             this.Tone = Tone;
+            this.delayInputNode = new this.Tone.Gain(1);
+            this.delayOutputNode = new this.Tone.Gain(1);
             this.masterGainNode = new this.Tone.Gain(this.masterVolume * 0.1);
             this.masterMeter = new this.Tone.Meter();
             
-
+            this.delayInputNode.connect(this.delayOutputNode);
+            this.delayOutputNode.connect(this.masterGainNode);
             this.masterGainNode.connect(this.masterMeter);
             this.masterGainNode.connect(this.Tone.context.destination);
             
@@ -431,6 +453,51 @@ export class SynthController {
         }
     }
 
+
+    setDelayTime(time) {
+        if (this.delayModel && this.globalDelay) {
+            const clampedTime = this.delayModel.setDelayTime(time);
+            this.globalDelay.delayTime.value = clampedTime;
+            console.log(`Delay time changed to: ${clampedTime}s`);
+        }
+    }
+
+    setDelayFeedback(feedback) {
+        if (this.delayModel && this.globalDelay) {
+            const clampedFeedback = this.delayModel.setFeedback(feedback);
+            this.globalDelay.feedback.value = clampedFeedback;
+            console.log(`Delay feedback changed to: ${clampedFeedback}`);
+        }
+    }
+
+    setDelayWet(wet) {
+        if (this.delayModel && this.globalDelay) {
+            const clampedWet = this.delayModel.setWet(wet);
+            this.globalDelay.wet.value = clampedWet;
+            console.log(`Delay wet changed to: ${clampedWet}`);
+        }
+    }
+
+    setDelayEnabled(enabled) {
+        if (this.delayModel && this.globalDelay) {
+            this.delayModel.setIsEnabled(enabled);
+            
+            if (enabled) {
+    
+                this.delayInputNode.disconnect();
+                this.delayInputNode.connect(this.globalDelay);
+                this.globalDelay.connect(this.delayOutputNode);
+
+            } else {
+
+                this.delayInputNode.disconnect();
+                this.delayInputNode.connect(this.masterGainNode);
+            }
+            
+            console.log(`Delay ${enabled ? 'enabled' : 'disabled'}`);
+        }
+    }
+
     getFilterSettings() {
         return this.filterModel ? this.filterModel.getSettings() : null;
     }
@@ -550,7 +617,18 @@ export class SynthController {
                     toneOsc.connect(envelope);
                     envelope.connect(gainNode);
                     gainNode.connect(noteFilter);
-                    noteFilter.connect(this.masterGainNode);
+                    noteFilter.connect(this.delayInputNode);
+                    
+
+                    if (pitchEnvelope && pitchGain && filterEnvelope && filterGain) {
+                        osc.addVoice(note, toneOsc, [envelope, pitchEnvelope, filterEnvelope], [gainNode, pitchGain, filterGain], noteFilter);
+                    } else if (pitchEnvelope && pitchGain) {
+                        osc.addVoice(note, toneOsc, [envelope, pitchEnvelope], [gainNode, pitchGain], noteFilter);
+                    } else if (filterEnvelope && filterGain) {
+                        osc.addVoice(note, toneOsc, [envelope, filterEnvelope], [gainNode, filterGain], noteFilter);
+                    } else {
+                        osc.addVoice(note, toneOsc, envelope, gainNode, noteFilter);
+                    }
 
          
     
@@ -652,5 +730,10 @@ export class SynthController {
         this.oscillators.forEach(oscillator => {
             oscillator.forceDisposeAllVoices();
         });
+        
+
+        if (this.globalDelay) {
+            this.globalDelay.dispose();
+        }
     }
 }

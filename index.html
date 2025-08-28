@@ -339,7 +339,46 @@
             <div class="effects-section">
                 <h2 class="section-title">EFFECTS</h2>
                 <div class="effects-controls">
-                    
+                    <div class="effect-item">
+                        <div class="effect-header">
+                            <div class="effect-enable">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="delay-enable">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="effect-label">DELAY</span>
+                            </div>
+                        </div>
+                        
+                        <div class="effect-controls">
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">TIME</label>
+                                    <span class="control-value" id="delay-time-value">0.300s</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="delay-time" 
+                                       min="0" max="1000" value="300" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">FEEDBACK</label>
+                                    <span class="control-value" id="delay-feedback-value">30%</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="delay-feedback" 
+                                       min="0" max="90" value="30" step="1">
+                            </div>
+                            
+                            <div class="effect-param">
+                                <div class="control-header">
+                                    <label class="control-label">WET</label>
+                                    <span class="control-value" id="delay-wet-value">30%</span>
+                                </div>
+                                <input type="range" class="effect-slider" id="delay-wet" 
+                                       min="0" max="100" value="30" step="1">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

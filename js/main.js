@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (window.synthController.pitchEnvelopeView) {
                     window.synthController.pitchEnvelopeView.updateAllControls(window.synthController.pitchEnvelopeModel);
                 }
+                if (window.synthController.delayView) {
+                    window.synthController.delayView.updateAllControls(window.synthController.delayModel);
+                }
             }
         }, 100);
 
