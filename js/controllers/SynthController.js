@@ -15,7 +15,6 @@ export class SynthController {
         this.modulationMatrixView = null;
         this.filterModel = null;
         this.filterView = null;
-        this.globalFilter = null;
         this.pitchEnvelopeModel = null;
         this.pitchEnvelopeView = null;
         this.isInitialized = false;
@@ -69,20 +68,7 @@ export class SynthController {
         this.filterView = new FilterView(this);
         
 
-        this.globalFilter = new this.Tone.Filter({
-            type: this.filterModel.type,
-            frequency: this.filterModel.frequency,
-            Q: this.filterModel.resonance,
-            rolloff: this.filterModel.rolloff
-        });
-        
-
-        this.masterGainNode.disconnect();
-        this.masterGainNode.connect(this.globalFilter);
-        this.globalFilter.connect(this.masterMeter);
-        this.globalFilter.connect(this.Tone.context.destination);
-        
-        console.log('Filter initialized and connected to audio chain');
+        console.log('Filter model and view initialized');
     }
 
     getOutputVolume(oscillatorId) {
@@ -363,34 +349,34 @@ export class SynthController {
 
 
     setFilterType(type) {
-        if (this.filterModel && this.globalFilter) {
+        if (this.filterModel) {
             if (this.filterModel.setType(type)) {
-                this.globalFilter.type = type;
+
                 console.log(`Filter type changed to: ${type}`);
             }
         }
     }
 
     setFilterFrequency(frequency) {
-        if (this.filterModel && this.globalFilter) {
+        if (this.filterModel) {
             const clampedFrequency = this.filterModel.setFrequency(frequency);
-            this.globalFilter.frequency.value = clampedFrequency;
+
             console.log(`Filter frequency changed to: ${clampedFrequency} Hz`);
         }
     }
 
     setFilterResonance(resonance) {
-        if (this.filterModel && this.globalFilter) {
+        if (this.filterModel) {
             const clampedResonance = this.filterModel.setResonance(resonance);
-            this.globalFilter.Q.value = clampedResonance;
+
             console.log(`Filter resonance changed to: ${clampedResonance}`);
         }
     }
 
     setFilterRolloff(rolloff) {
-        if (this.filterModel && this.globalFilter) {
+        if (this.filterModel) {
             if (this.filterModel.setRolloff(rolloff)) {
-                this.globalFilter.rolloff = rolloff;
+
                 console.log(`Filter rolloff changed to: ${rolloff} dB/oct`);
             }
         }
@@ -474,15 +460,26 @@ export class SynthController {
                     });
                     
                     const gainNode = new this.Tone.Gain(velocity * this.getOutputVolume(osc.id));
+                    
+                    const noteFilter = new this.Tone.Filter({
+                        type: this.filterModel.type,
+                        frequency: this.filterModel.frequency,
+                        Q: this.filterModel.resonance,
+                        rolloff: this.filterModel.rolloff
+                    });
+                    
+
                     toneOsc.connect(envelope);
                     envelope.connect(gainNode);
-                    gainNode.connect(this.masterGainNode);
+                    gainNode.connect(noteFilter);
+                    noteFilter.connect(this.masterGainNode);
 
          
+    
                     if (pitchEnvelope && pitchGain) {
-                        osc.addVoice(note, toneOsc, [envelope, pitchEnvelope], [gainNode, pitchGain]);
+                        osc.addVoice(note, toneOsc, [envelope, pitchEnvelope], [gainNode, pitchGain], noteFilter);
                     } else {
-                        osc.addVoice(note, toneOsc, envelope, gainNode);
+                        osc.addVoice(note, toneOsc, envelope, gainNode, noteFilter);
                     }
                 }
             }

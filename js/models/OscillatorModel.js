@@ -25,13 +25,14 @@ export class OscillatorModel {
         }
     }
 
-    addVoice(note, toneOsc, envelopes, gainNodes) {
+    addVoice(note, toneOsc, envelopes, gainNodes, filter) {
         if (this.voices.size >= this.maxVoices) {
             const oldestNote = this.voices.keys().next().value;
             this.removeVoice(oldestNote);
         }
 
-        this.voices.set(note, {toneOsc: toneOsc, envelope: envelopes, gainNode: gainNodes});
+
+            this.voices.set(note, {toneOsc: toneOsc, envelope: envelopes, gainNode: gainNodes, filter: filter});
 
     }
 
@@ -107,8 +108,9 @@ export class OscillatorModel {
                 } else {
                     voice.gainNode.dispose();
                 }
-      
-            
+                if (voice.filter ) {
+                    voice.filter.dispose();
+                }
         } catch (error) {
             console.warn('Error disposing voice:', error);
         }
