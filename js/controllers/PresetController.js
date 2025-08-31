@@ -1,11 +1,59 @@
 class PresetController {
     constructor(synthController) {
         this.synthController = synthController;
+        this.presets = [];
         this.init();
     }
 
-    init() {
+    async init() {
+        await this.loadPresets();
         this.bindEvents();
+    }
+
+    async loadPresets() {
+        try {
+            console.log('PresetController: Caricamento preset...');
+            const response = await fetch('presets.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            this.presets = data.presets || [];
+            console.log('PresetController: Preset caricati:', this.presets.length);
+            this.populatePresetSelector();
+            
+            if (this.presets.length > 0) {
+                console.log('PresetController: Caricamento automatico del primo preset:', this.presets[0].name);
+                this.loadPresetByName(this.presets[0].name);
+            }
+        } catch (error) {
+            console.error('PresetController: Errore nel caricamento dei preset:', error);
+            this.presets = [];
+        }
+    }
+
+    populatePresetSelector() {
+        const presetSelector = document.getElementById('preset-select');
+        if (!presetSelector) {
+            console.error('PresetController: Elemento preset-select non trovato!');
+            return;
+        }
+
+        presetSelector.innerHTML = '';
+        
+        const emptyOption = document.createElement('option');
+        emptyOption.value = '';
+        emptyOption.textContent = 'Seleziona un preset...';
+        presetSelector.appendChild(emptyOption);
+        
+        this.presets.forEach(preset => {
+            const option = document.createElement('option');
+            option.value = preset.name;
+            option.textContent = preset.name;
+            presetSelector.appendChild(option);
+        });
+        
+        console.log('PresetController: Selettore preset popolato');
     }
 
     bindEvents() {
@@ -14,6 +62,7 @@ class PresetController {
         const exportBtn = document.getElementById('export-preset');
         const importBtn = document.getElementById('import-preset');
         const fileInput = document.getElementById('preset-file-input');
+        const presetSelector = document.getElementById('preset-select');
 
         if (!exportBtn) {
             console.error('PresetController: Elemento export-preset non trovato!');
@@ -45,6 +94,17 @@ class PresetController {
                 this.importPresetFromFile(e.target.files[0]);
             }
         });
+
+        if (presetSelector) {
+            presetSelector.addEventListener('change', (e) => {
+                const selectedPresetName = e.target.value;
+                if (selectedPresetName) {
+                    this.loadPresetByName(selectedPresetName);
+                }
+            });
+        } else {
+            console.error('PresetController: Elemento preset-select non trovato!');
+        }
 
         console.log('PresetController: Event listeners aggiunti con successo');
     }
@@ -106,6 +166,24 @@ class PresetController {
         } catch (error) {
             console.error('PresetController: Errore nel recupero dello stato del synth:', error);
             return null;
+        }
+    }
+
+    loadPresetByName(presetName) {
+        console.log('PresetController: Caricamento preset:', presetName);
+        
+        const preset = this.presets.find(p => p.name === presetName);
+        if (!preset) {
+            console.error('PresetController: Preset non trovato:', presetName);
+            return;
+        }
+        
+        console.log('PresetController: Preset trovato, applicazione...');
+        this.applyPreset(preset);
+        
+        const presetSelector = document.getElementById('preset-select');
+        if (presetSelector) {
+            presetSelector.value = presetName;
         }
     }
 

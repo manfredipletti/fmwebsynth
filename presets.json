@@ -1,0 +1,688 @@
+{
+  "presets": [
+    {
+      "name": "INIT",
+      "oscillators": [
+        {
+          "id": 0,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 1,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 2,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 3,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 4,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 5,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 6,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        },
+        {
+          "id": 7,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0015898744486991035,
+          "decay": 0.001,
+          "sustain": 1,
+          "release": 0.05029516091735804,
+          "phase": 0
+        }
+      ],
+      "filter": {
+        "type": "lowpass",
+        "frequency": 20000,
+        "resonance": 1,
+        "rolloff": -24,
+        "isEnabled": true
+      },
+      "filterEnvelope": {
+        "enabled": true,
+        "amount": 0,
+        "attack": 0.001,
+        "decay": 0.3,
+        "sustain": 1,
+        "release": 1
+      },
+      "pitchEnvelope": {
+        "enabled": true,
+        "amount": 0,
+        "attack": 0,
+        "decay": 0.3,
+        "sustain": 0,
+        "release": 1
+      },
+      "delay": {
+        "delayTime": 0.3,
+        "feedback": 0.3,
+        "wet": 0.3,
+        "isEnabled": false
+      },
+      "reverb": {
+        "decay": 2,
+        "predelay": 0.1,
+        "dryWet": 0.3,
+        "isEnabled": false
+      },
+      "compressor": {
+        "threshold": -20,
+        "attack": 0.003,
+        "release": 0.25,
+        "ratio": 4,
+        "reduction": 0,
+        "isEnabled": false
+      },
+      "modulationMatrix": {
+        "0": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "1": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "2": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "3": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "4": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "5": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "6": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "7": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        }
+      },
+      "outputValues": {
+        "0": 100,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      }
+    },
+    {
+      "name": "E-PIANO",
+      "oscillators": [
+        {
+          "id": 0,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1.011,
+          "attack": 0.0015898744486991035,
+          "decay": 1.7049371176464239,
+          "sustain": 0,
+          "release": 0.001,
+          "phase": 1
+        },
+        {
+          "id": 1,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1.9989,
+          "attack": 0.006058207007253071,
+          "decay": 2,
+          "sustain": 0.42,
+          "release": 0.14338361066513136,
+          "phase": 1
+        },
+        {
+          "id": 2,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 3,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 4,
+          "attack": 0.006104430294603454,
+          "decay": 2,
+          "sustain": 0.44,
+          "release": 0.3,
+          "phase": 1
+        },
+        {
+          "id": 4,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 12,
+          "attack": 0.003613050811772349,
+          "decay": 1.3368276077519037,
+          "sustain": 0,
+          "release": 0.3,
+          "phase": 1
+        },
+        {
+          "id": 5,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1.0005,
+          "attack": 0.006151006259287397,
+          "decay": 2,
+          "sustain": 0.44,
+          "release": 0.14096184405430093,
+          "phase": 1
+        },
+        {
+          "id": 6,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 7,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        }
+      ],
+      "filter": {
+        "type": "lowpass",
+        "frequency": 20000,
+        "resonance": 1,
+        "rolloff": -24,
+        "isEnabled": true
+      },
+      "filterEnvelope": {
+        "enabled": true,
+        "amount": 0,
+        "attack": 0.001,
+        "decay": 0.3,
+        "sustain": 1,
+        "release": 1
+      },
+      "pitchEnvelope": {
+        "enabled": true,
+        "amount": 16,
+        "attack": 0.001,
+        "decay": 0.008725564812667525,
+        "sustain": 0,
+        "release": 1
+      },
+      "delay": {
+        "delayTime": 0.3,
+        "feedback": 0.3,
+        "wet": 0.06,
+        "isEnabled": true
+      },
+      "reverb": {
+        "decay": 3.510649,
+        "predelay": 0,
+        "dryWet": 0.4,
+        "isEnabled": true
+      },
+      "compressor": {
+        "threshold": -14.200000000000003,
+        "attack": 0.647,
+        "release": 0.103,
+        "ratio": 4,
+        "reduction": 0.00650554100672404,
+        "isEnabled": true
+      },
+      "modulationMatrix": {
+        "0": {
+          "0": 0,
+          "1": 13,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "1": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "2": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 16,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "3": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "4": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 100,
+          "6": 0,
+          "7": 0
+        },
+        "5": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "6": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "7": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        }
+      },
+      "outputValues": {
+        "0": 0,
+        "1": 54,
+        "2": 0,
+        "3": 32,
+        "4": 0,
+        "5": 42,
+        "6": 0,
+        "7": 0
+      }
+    },
+    {
+      "name": "ORGAN",
+      "oscillators": [
+        {
+          "id": 0,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 6.99,
+          "attack": 0.0024895657436959794,
+          "decay": 0.004111417491435078,
+          "sustain": 0,
+          "release": 0.001,
+          "phase": 0
+        },
+        {
+          "id": 1,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 2,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 2,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 0.499,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 3,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 4,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 5,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.00272731913438329,
+          "decay": 0.2,
+          "sustain": 1,
+          "release": 0.004182413432678153,
+          "phase": 0
+        },
+        {
+          "id": 6,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0,
+          "decay": 0.2,
+          "sustain": 0.7,
+          "release": 0.3,
+          "phase": 0
+        },
+        {
+          "id": 7,
+          "enabled": true,
+          "waveform": "sine",
+          "ratio": 1,
+          "attack": 0.0021062064556619372,
+          "decay": 0.2,
+          "sustain": 1,
+          "release": 0.003239349896410424,
+          "phase": 0
+        }
+      ],
+      "filter": {
+        "type": "lowpass",
+        "frequency": 20000,
+        "resonance": 1,
+        "rolloff": -24,
+        "isEnabled": true
+      },
+      "filterEnvelope": {
+        "enabled": true,
+        "amount": 0,
+        "attack": 0.001,
+        "decay": 0.3,
+        "sustain": 1,
+        "release": 1
+      },
+      "pitchEnvelope": {
+        "enabled": true,
+        "amount": 0,
+        "attack": 0,
+        "decay": 0.3,
+        "sustain": 0,
+        "release": 1
+      },
+      "delay": {
+        "delayTime": 0.062,
+        "feedback": 0.3,
+        "wet": 0.06,
+        "isEnabled": true
+      },
+      "reverb": {
+        "decay": 2,
+        "predelay": 0.1,
+        "dryWet": 0.25,
+        "isEnabled": true
+      },
+      "compressor": {
+        "threshold": -13.400000000000006,
+        "attack": 0.003,
+        "release": 0.098,
+        "ratio": 4,
+        "reduction": 0.00003545177945246299,
+        "isEnabled": true
+      },
+      "modulationMatrix": {
+        "0": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 21,
+          "6": 0,
+          "7": 24
+        },
+        "1": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "2": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "3": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "4": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "5": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "6": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        },
+        "7": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0,
+          "7": 0
+        }
+      },
+      "outputValues": {
+        "0": 0,
+        "1": 46,
+        "2": 37,
+        "3": 0,
+        "4": 0,
+        "5": 50,
+        "6": 0,
+        "7": 50
+      }
+    }
+  ]
+}

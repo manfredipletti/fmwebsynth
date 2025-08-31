@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     const { PresetController } = await import('./controllers/PresetController.js');
                     window.presetController = new PresetController(window.synthController);
+                    await window.presetController.init(); 
                     console.log('PresetController inizializzato con successo');
                 } catch (error) {
                     console.error('Errore nell\'inizializzazione del PresetController:', error);
