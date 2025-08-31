@@ -34,7 +34,7 @@ export class OscillatorModel {
         this.voices.set(note, {toneOsc: toneOsc, envelope: envelopes, gainNode: gainNodes, filter: filter});
     }
 
-    addSelfModulation(note, delay, selfModulationGain) {
+    addModulation(note, delay, selfModulationGain) {
         if (this.selfModulations.size >= this.maxVoices) {
             const oldestNote = this.selfModulations.keys().next().value;
             this.removeSelfModulation(oldestNote);

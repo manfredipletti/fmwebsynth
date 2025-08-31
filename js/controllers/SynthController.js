@@ -289,16 +289,21 @@ export class SynthController {
                         }
         
                         const modulationGain = new this.Tone.Gain(modulationValue * 100);
+                        const delay = new this.Tone.Delay(0.0000226);
                         modulatorEnvelope.connect(modulationGain);
-                        modulationGain.connect(carrierOsc.frequency);
+                        modulationGain.connect(delay);
+                        delay.connect(carrierOsc.frequency);
+                        carrier.addModulation(note, delay, modulationGain);
                                          } 
                                          else {
-                        const delay = new this.Tone.Delay(0.0001);
+                        const delay = new this.Tone.Delay(0.0000226);
+                        // const delay = new this.Tone.Delay(0.000000000000001);
                         const modulationGain = new this.Tone.Gain(modulationValue * 100);
+                        // const modulationGain = new this.Tone.Gain(modulationValue);
                         carrierOsc.connect(delay);
                         delay.connect(modulationGain);
                         modulationGain.connect(carrierOsc.frequency);
-                        carrier.addSelfModulation(note, delay, modulationGain);
+                        carrier.addModulation(note, delay, modulationGain);
                         //  const selfModulationOsc = new this.Tone.Oscillator(carrierOsc.frequency.value, carrierOsc.waveform);
                         //  selfModulationOsc.phase = carrier.getInitialPhase();
                         // const selfModulationEnvelope = new this.Tone.AmplitudeEnvelope({
