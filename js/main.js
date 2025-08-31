@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         window.synthController = new SynthController();
         
+        try {
+            const { PresetController } = await import('./controllers/PresetController.js');
+            window.presetController = new PresetController(window.synthController);
+            console.log('PresetController inizializzato con successo');
+        } catch (error) {
+            console.error('Errore nell\'inizializzazione del PresetController:', error);
+        }
+        
         addTestButton();
         initMasterVolume();
         initEnvelopeTabs();
@@ -27,14 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 if (window.synthController.compressorView) {
                     window.synthController.compressorView.updateAllControls(window.synthController.compressorModel);
-                }
-                try {
-                    const { PresetController } = await import('./controllers/PresetController.js');
-                    window.presetController = new PresetController(window.synthController);
-                    await window.presetController.init(); 
-                    console.log('PresetController inizializzato con successo');
-                } catch (error) {
-                    console.error('Errore nell\'inizializzazione del PresetController:', error);
                 }
             }
         }, 100);
