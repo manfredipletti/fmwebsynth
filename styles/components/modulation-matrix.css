@@ -4,6 +4,11 @@
     width: 100%;
     overflow-x: auto;
     position: relative;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    min-height: 400px;
+    background: var(--darker-bg);
 }
 
 .matrix-container {
@@ -52,7 +57,6 @@
     font-weight: bold;
 }
 
-/* Body with modulator labels and grid */
 .matrix-body {
     display: grid;
     grid-template-columns: 80px 1fr;
@@ -134,7 +138,6 @@
     box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
 }
 
-/* Hide number input arrows */
 .matrix-cell::-webkit-outer-spin-button,
 .matrix-cell::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -238,7 +241,6 @@
     box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
 }
 
-/* Hide number input arrows */
 .output-cell::-webkit-outer-spin-button,
 .output-cell::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -269,58 +271,6 @@
     opacity: 1; 
     box-shadow: 0 0 10px var(--neon-cyan);
 }
-
-
-.matrix-connections {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.connection-line {
-    position: absolute;
-    background: linear-gradient(90deg, var(--neon-green), transparent);
-    height: 2px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    box-shadow: 0 0 10px var(--neon-green);
-}
-
-.connection-line.active {
-    opacity: 1;
-}
-
-.connection-line.vertical {
-    background: linear-gradient(180deg, var(--neon-green), transparent);
-    width: 2px;
-    height: auto;
-}
-
-.connection-line.horizontal {
-    background: linear-gradient(90deg, var(--neon-green), transparent);
-    width: auto;
-    height: 2px;
-}
-
-.connection-line.pulse {
-    animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-    0%, 100% {
-        opacity: 0.6;
-        box-shadow: 0 0 10px var(--neon-green);
-    }
-    50% {
-        opacity: 1;
-        box-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
-    }
-}
-
 
 @media (max-width: 1024px) {
     .modulation-matrix {

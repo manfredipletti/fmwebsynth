@@ -12,33 +12,24 @@ class PresetController {
 
     async loadPresets() {
         try {
-            console.log('PresetController: Caricamento preset...');
             const response = await fetch('presets.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
             this.presets = data.presets || [];
-            console.log('PresetController: Preset caricati:', this.presets.length);
             this.populatePresetSelector();
             
             if (this.presets.length > 0) {
-                console.log('PresetController: Caricamento automatico del primo preset:', this.presets[0].name);
                 this.loadPresetByName(this.presets[0].name);
             }
         } catch (error) {
-            console.error('PresetController: Errore nel caricamento dei preset:', error);
             this.presets = [];
         }
     }
 
     populatePresetSelector() {
         const presetSelector = document.getElementById('preset-select');
-        if (!presetSelector) {
-            console.error('PresetController: Elemento preset-select non trovato!');
-            return;
-        }
-
         presetSelector.innerHTML = '';
         
         const emptyOption = document.createElement('option');
@@ -53,39 +44,21 @@ class PresetController {
             presetSelector.appendChild(option);
         });
         
-        console.log('PresetController: Selettore preset popolato');
     }
 
     bindEvents() {
-        console.log('PresetController: Binding events...');
         
         const exportBtn = document.getElementById('export-preset');
         const importBtn = document.getElementById('import-preset');
         const fileInput = document.getElementById('preset-file-input');
         const presetSelector = document.getElementById('preset-select');
 
-        if (!exportBtn) {
-            console.error('PresetController: Elemento export-preset non trovato!');
-            return;
-        }
-        if (!importBtn) {
-            console.error('PresetController: Elemento import-preset non trovato!');
-            return;
-        }
-        if (!fileInput) {
-            console.error('PresetController: Elemento preset-file-input non trovato!');
-            return;
-        }
-
-        console.log('PresetController: Elementi trovati, aggiungendo event listeners...');
 
         exportBtn.addEventListener('click', () => {
-            console.log('PresetController: Pulsante export cliccato');
             this.exportCurrentPreset();
         });
 
         importBtn.addEventListener('click', () => {
-            console.log('PresetController: Pulsante import cliccato');
             fileInput.click();
         });
 
@@ -95,34 +68,21 @@ class PresetController {
             }
         });
 
-        if (presetSelector) {
-            presetSelector.addEventListener('change', (e) => {
-                const selectedPresetName = e.target.value;
-                if (selectedPresetName) {
-                    this.loadPresetByName(selectedPresetName);
-                }
-            });
-        } else {
-            console.error('PresetController: Elemento preset-select non trovato!');
-        }
-
-        console.log('PresetController: Event listeners aggiunti con successo');
+        presetSelector.addEventListener('change', (e) => {
+            const selectedPresetName = e.target.value;
+            if (selectedPresetName) {
+                this.loadPresetByName(selectedPresetName);
+            }
+        });
     }
 
     exportCurrentPreset() {
-        console.log('PresetController: Iniziando export...');
         
         try {
             const preset = this.getCurrentSynthState();
-            if (!preset) {
-                console.error('PresetController: Impossibile ottenere lo stato del synth');
-                return;
-            }
             
-            console.log('PresetController: Stato del synth ottenuto:', preset);
             
             const presetData = JSON.stringify(preset, null, 2);
-            console.log('PresetController: JSON generato:', presetData);
             
             const blob = new Blob([presetData], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -135,18 +95,12 @@ class PresetController {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            console.log('Preset esportato con successo');
         } catch (error) {
-            console.error('PresetController: Errore durante l\'export:', error);
+            console.error(error);
         }
     }
 
     getCurrentSynthState() {
-        if (!this.synthController) {
-            console.error('PresetController: SynthController non disponibile');
-            return null;
-        }
-
         try {
             return {
                 name: "Preset Corrente",
@@ -164,56 +118,30 @@ class PresetController {
             outputValues: this.synthController.modulationMatrixView.getOutputValues()
             };
         } catch (error) {
-            console.error('PresetController: Errore nel recupero dello stato del synth:', error);
             return null;
         }
     }
 
     loadPresetByName(presetName) {
-        console.log('PresetController: Caricamento preset:', presetName);
         
-        const preset = this.presets.find(p => p.name === presetName);
-        if (!preset) {
-            console.error('PresetController: Preset non trovato:', presetName);
-            return;
-        }
-        
-        console.log('PresetController: Preset trovato, applicazione...');
-        this.applyPreset(preset);
-        
+        const preset = this.presets.find(p => p.name === presetName);       
+        this.applyPreset(preset);   
         const presetSelector = document.getElementById('preset-select');
-        if (presetSelector) {
-            presetSelector.value = presetName;
-        }
+        presetSelector.value = presetName;
+
     }
 
     async importPresetFromFile(file) {
-        try {
-            console.log('PresetController: Iniziando import...');
-            
+        try {   
             const text = await file.text();
-            const preset = JSON.parse(text);
-            
-            if (!preset.oscillators || !preset.filter) {
-                console.error('PresetController: File non valido - formato preset non riconosciuto');
-                return;
-            }
-            
-            console.log('PresetController: Preset caricato:', preset);
-            
-            // Applica il preset
+            const preset = JSON.parse(text);          
             this.applyPreset(preset);
-            
-            console.log('PresetController: Preset importato con successo');
-            
         } catch (error) {
-            console.error('PresetController: Errore nell\'importazione del preset:', error);
+            console.error( error);
         }
     }
 
     applyPreset(preset) {
-        console.log('PresetController: Applicando preset...');
-        
         try {
             if (preset.oscillators) {
                 preset.oscillators.forEach(osc => {
@@ -292,17 +220,14 @@ class PresetController {
                 this.synthController.modulationMatrixView.setOutputValues(preset.outputValues);
             }
 
-            this.updateAllViews();
-            
-            console.log('PresetController: Preset applicato con successo');
+            this.updateAllViews(); 
             
         } catch (error) {
-            console.error('PresetController: Errore nell\'applicazione del preset:', error);
+            console.error(error);
         }
     }
 
     updateAllViews() {
-        console.log('PresetController: Aggiornando tutte le viste...');
         
         try {
             if (this.synthController.oscillatorViews) {
@@ -312,7 +237,6 @@ class PresetController {
                     }
                 });
             }
-
 
             if (this.synthController.filterView && this.synthController.filterView.updateDisplay) {
                 this.synthController.filterView.updateDisplay();
@@ -333,9 +257,8 @@ class PresetController {
                 this.synthController.compressorView.updateAllControls(this.synthController.compressorModel);
             }
 
-            console.log('PresetController: Tutte le viste aggiornate');
         } catch (error) {
-            console.error('PresetController: Errore nell\'aggiornamento delle viste:', error);
+            console.error(error);
         }
     }
 }

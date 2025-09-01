@@ -16,7 +16,7 @@
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-.oscillators-section {
+.synth-section {
     background: var(--panel-bg);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-xl);
@@ -24,67 +24,6 @@
     box-shadow: 
         var(--shadow-neon-cyan),
         var(--shadow-inset);
-}
-
-.modulation-section {
-    background: var(--panel-bg);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: 
-        var(--shadow-neon-cyan),
-        var(--shadow-inset);
-}
-
-.modulation-matrix {
-    background: var(--darker-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-    min-height: 400px;
-}
-
-.filter-section {
-    background: var(--panel-bg);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: 
-        var(--shadow-neon-cyan),
-        var(--shadow-inset);
-}
-
-.envelopes-section {
-    background: var(--panel-bg);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: 
-        var(--shadow-neon-cyan),
-        var(--shadow-inset);
-}
-
-.effects-section {
-    background: var(--panel-bg);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: 
-        var(--shadow-neon-cyan),
-        var(--shadow-inset);
-}
-
-.effects-controls {
-    background: var(--darker-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-    min-height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    font-style: italic;
 }
 
 @media (max-width: 768px) {
@@ -96,9 +35,7 @@
         font-size: 1.5rem;
     }
     
-    .oscillators-section,
-    .modulation-section,
-    .effects-section {
+    .synth-section {
         padding: var(--spacing-lg);
     }
 } 

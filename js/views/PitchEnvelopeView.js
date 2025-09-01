@@ -18,10 +18,6 @@ export class PitchEnvelopeView {
         this.bindEvents();
         this.updateDisplay();
         
-        console.log('PitchEnvelopeView initialized');
-        console.log('Enable toggle found:', !!this.enableToggle);
-        console.log('Amount slider found:', !!this.amountSlider);
-        console.log('Attack slider found:', !!this.attackSlider);
     }
     
     bindEvents() {

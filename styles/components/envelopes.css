@@ -1,14 +1,3 @@
-
-.envelopes-section {
-    background: var(--panel-bg);
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: 
-        var(--shadow-neon-cyan),
-        var(--shadow-inset);
-}
-
 .envelopes-controls {
     margin-top: var(--spacing-md);
 }
@@ -302,9 +291,6 @@ input:not(:checked) ~ .envelope-controls {
 }
 
 @media (max-width: 768px) {
-    .envelopes-section {
-        padding: var(--spacing-md);
-    }
     
     .envelopes-tabs {
         gap: var(--spacing-xs);

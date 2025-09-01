@@ -110,7 +110,7 @@ export class OscillatorModel {
                     voice.filter.dispose();
                 }
         } catch (error) {
-            console.warn('Error disposing voice:', error);
+            console.warn(error);
         }
     }
 

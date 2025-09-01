@@ -1,12 +1,3 @@
-
-.filter-section {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    min-height: 200px;
-}
-
 .filter-controls {
     display: flex;
     flex-wrap: wrap;
@@ -92,7 +83,6 @@
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
 }
 
-/* Filter Resonance Control */
 .filter-resonance {
     display: flex;
     flex-direction: column;
@@ -138,7 +128,6 @@
     box-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
 }
 
-/* Filter Rolloff Selector */
 .filter-rolloff {
     display: flex;
     flex-direction: column;
