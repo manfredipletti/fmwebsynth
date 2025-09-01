@@ -683,6 +683,235 @@
         "6": 0,
         "7": 50
       }
+    },
+    {
+  "name": "BELLS",
+  "oscillators": [
+    {
+      "id": 0,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 19.3,
+      "attack": 0.0015898744486991035,
+      "decay": 0.2648231925282265,
+      "sustain": 0.34,
+      "release": 0.05029516091735804,
+      "phase": 0
+    },
+    {
+      "id": 1,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 6,
+      "attack": 0.0015898744486991035,
+      "decay": 2,
+      "sustain": 0,
+      "release": 0.05029516091735804,
+      "phase": 0
+    },
+    {
+      "id": 2,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 1,
+      "attack": 0.0015898744486991035,
+      "decay": 2,
+      "sustain": 0,
+      "release": 0.025229557391312638,
+      "phase": 0
+    },
+    {
+      "id": 3,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 1,
+      "attack": 0.001,
+      "decay": 1.5212231147251296,
+      "sustain": 0.23,
+      "release": 0.05029516091735804,
+      "phase": 0
+    },
+    {
+      "id": 4,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 18.5,
+      "attack": 0.0015898744486991035,
+      "decay": 0.9072414334743276,
+      "sustain": 0,
+      "release": 0.001,
+      "phase": 0
+    },
+    {
+      "id": 5,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 3,
+      "attack": 0.024346279202022435,
+      "decay": 0.5052933311285145,
+      "sustain": 0.03,
+      "release": 0.05029516091735804,
+      "phase": 0
+    },
+    {
+      "id": 6,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 1,
+      "attack": 0.0015898744486991035,
+      "decay": 0.001,
+      "sustain": 1,
+      "release": 0.05029516091735804,
+      "phase": 0
+    },
+    {
+      "id": 7,
+      "enabled": true,
+      "waveform": "sine",
+      "ratio": 1,
+      "attack": 0.0015898744486991035,
+      "decay": 0.001,
+      "sustain": 1,
+      "release": 0.05029516091735804,
+      "phase": 0
     }
+  ],
+  "filter": {
+    "type": "lowpass",
+    "frequency": 1459,
+    "resonance": 1,
+    "rolloff": -24,
+    "isEnabled": true
+  },
+  "filterEnvelope": {
+    "enabled": true,
+    "amount": 100,
+    "attack": 0.001,
+    "decay": 0.293378,
+    "sustain": 0,
+    "release": 0.6124999999999999
+  },
+  "pitchEnvelope": {
+    "enabled": true,
+    "amount": 0,
+    "attack": 0,
+    "decay": 0.3,
+    "sustain": 0,
+    "release": 1
+  },
+  "delay": {
+    "delayTime": 0.3,
+    "feedback": 0.3,
+    "wet": 0.27,
+    "isEnabled": true
+  },
+  "reverb": {
+    "decay": 5.870413,
+    "predelay": 0.045,
+    "dryWet": 0.39,
+    "isEnabled": true
+  },
+  "compressor": {
+    "threshold": -20.799999999999997,
+    "attack": 0.44,
+    "release": 0.144,
+    "ratio": 4,
+    "reduction": 0.03412423928578694,
+    "isEnabled": true
+  },
+  "modulationMatrix": {
+    "0": {
+      "0": 2,
+      "1": 9,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    "1": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 38,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    "2": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 15,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    "3": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    "4": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 58,
+      "6": 0,
+      "7": 0
+    },
+    "5": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    "6": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    "7": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    }
+  },
+  "outputValues": {
+    "0": 0,
+    "1": 60,
+    "2": 64,
+    "3": 0,
+    "4": 0,
+    "5": 65,
+    "6": 0,
+    "7": 0
+  }
+}
+
   ]
 }
